@@ -16,9 +16,15 @@ public class Breakout {
         frame.setSize(640,480);
         frame.setFocusable(false);
 
-        BreakoutPanel breakoutPanel = new BreakoutPanel();
-        breakoutPanel.setFocusable(true);
-        breakoutPanel.addKeyListener(breakoutPanel);
+        Ball ball = new Ball(20, 10, 10);
+        Paddle paddle = new Paddle(100, 10, 50);
+
+        GameManager manager = new GameManager(ball, paddle);
+
+
+        BreakoutPanel breakoutPanel = new BreakoutPanel(ball, paddle);
+        //breakoutPanel.setFocusable(true);
+        //breakoutPanel.addKeyListener(breakoutPanel);
 
         frame.add(breakoutPanel);
         frame.setVisible(true);
@@ -26,7 +32,7 @@ public class Breakout {
         breakoutPanel.requestFocusInWindow();
     }
 }
-
+/*
 class BreakoutPanel extends JPanel implements KeyListener {
     int xPosition = 285;
     int yPosition = 430;
@@ -66,4 +72,5 @@ class BreakoutPanel extends JPanel implements KeyListener {
         g2d.setColor(Color.BLACK);
         g2d.fill(new Rectangle(xPosition, yPosition, 60, 10));
     }
-}
+
+}*/
