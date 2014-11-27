@@ -8,10 +8,10 @@ public class Ball extends JPanel implements PositionInterval {
 
     private Position position;
 
-    public Ball(int diameter, int x, int y) {
+    public Ball(int diameter) {
         super();
         this.diameter = diameter;
-        this.position = new Position(x, y);
+        this.position = new Position(0, 0);
         setOpaque(false);
     }
 
@@ -22,7 +22,6 @@ public class Ball extends JPanel implements PositionInterval {
 
     public void UpdatePosition(int dx, int dy) {
         position.changeXY(dx, dy);
-        repaint();
     }
 
     public Interval getInterval() {
@@ -34,7 +33,7 @@ public class Ball extends JPanel implements PositionInterval {
     }
 
     public void setPosition(Position position) {
-        this.position = position;
+        this.position.setPosition(position);
     }
 
     public int getDiameter() {

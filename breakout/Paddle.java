@@ -49,13 +49,15 @@ public class Paddle extends JPanel implements PositionInterval {
 
     public void updatePosition() {
         if (offset <= 0 && delta < 0) {
-            delta = 0;
+            delta = delta / -2;
             offset = 0;
             return;
         } else if (offset + size.getWidth() >= getWidth() && delta > 0) {
-            delta = 0;
+            delta = delta / -2;
             offset = getWidth() - size.getWidth();
             return;
+        } else if (offset + size.getWidth() > getWidth()) {
+            offset = getWidth() - size.getWidth();
         }
 
         if (delta > 0)

@@ -1,5 +1,7 @@
 package breakout;
 
+import sun.nio.cs.ext.MacThai;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,21 +42,24 @@ public class GameManager implements ActionListener {
         ballChange[0] = 2;
         ballChange[1] = 4;
 
-        Level level = new Level(2, 5);
+        Level level = new Level(2, 5, new Position(30, 300));
         LinkedList<BlockAbstract> b = level.getBlocks();
-        b.add(new BlockWeak());
-        b.add(new BlockWeak());
-        b.add(new BlockWeak());
-        b.add(new BlockWeak());
+        b.add(new BlockWeak(50));
+        b.add(new BlockWeak(20));
+        b.add(new BlockWeak(30));
+        b.add(new BlockWeak(40));
         b.add(new BlockWeak(false));
-        b.add(new BlockWeak());
+        b.add(new BlockWeak(10));
         b.add(new BlockStrong());
-        b.add(new BlockWeak());
-        b.add(new BlockWeak());
-        b.add(new BlockWeak());
+        b.add(new BlockWeak(10));
+        b.add(new BlockWeak(100));
+        b.add(new BlockWeak(70));
         currentGame = level;
         mainPanel.setLevel(level);
+
+        ball.setPosition(level.getStart());
     }
+
 
     public void startGame() {
         timer.start();
@@ -64,8 +69,11 @@ public class GameManager implements ActionListener {
         // TODO
     }
 
+    public void lostLife() {
+        ball.setPosition(currentGame.getStart());
+    }
+
     public void actionPerformed(ActionEvent e) {
-        paddle.updatePosition();
         updateBallPosition();
         mainPanel.repaint();
     }
@@ -73,59 +81,58 @@ public class GameManager implements ActionListener {
     private void updateBallPosition() {
         int maxX = mainPanel.getWidth();
         int maxY = mainPanel.getHeight();
-        int quickX = 0;
-        int quickY = 0;
 
         Position pos = ball.getPosition();
 
-        if (pos.getX() + ball.getDiameter() >= maxX || pos.getX() <= 0) {
-            ballChange[0] = ballChange[0] * -1;
-            if (quickX == 0)
-                quickX += ballChange[0];
+        if (pos.getX() + ball.getDiameter() >= maxX) {
+            ballChange[0] = Math.abs(ballChange[0]) * -1;
+        } else if (pos.getX() <= 0) {
+            ballChange[0] = Math.abs(ballChange[0]);
         }
 
         if (pos.getY() <= 0) {
             ballChange[1] = ballChange[1] * -1;
-            if (quickY == 0)
-                quickY += ballChange[1];
         } else if (pos.getY() + ball.getDiameter() >= maxY) {
-            // Game over
+            lostLife();
         }
 
         Interval bval = ball.getInterval();
         Interval pval = paddle.getInterval();
         int check;
 
-        if ((check = bval.checkCollision(pval)) == Interval.TOPBOTTOM) {
-            ballChange[1] = ballChange[1] * -1;
-            if (quickY == 0)
-                quickY += ballChange[1];
-        } else if (check == Interval.SIDE) {
-            ballChange[0] = ballChange[0] * -1;
-            if (quickX == 0)
-                quickX += ballChange[0];
+        if ((check = bval.checkCollision(pval)) == Interval.BOTTOM) {
+            ballChange[1] = Math.abs(ballChange[1]) * -1;
+        } else if (check == Interval.TOP) {
+            ballChange[1] = Math.abs(ballChange[1]);
+        } else if (check == Interval.LEFT) {
+            ballChange[0] = Math.abs(ballChange[0]) * -1;
+        } else if (check == Interval.RIGHT) {
+            ballChange[0] = Math.abs(ballChange[0]);
         }
+
         LinkedList<BlockAbstract> block = currentGame.getBlocks();
 
         for (BlockAbstract b : block) {
             if (b.isVis()) {
                 pval = b.getInterval();
 
-                if ((check = bval.checkCollision(pval)) == Interval.TOPBOTTOM) {
-                    ballChange[1] = ballChange[1] * -1;
-                    if (quickY == 0)
-                        quickY += ballChange[1];
-                    b.destroy();
-                } else if (check == Interval.SIDE) {
-                    ballChange[0] = ballChange[0] * -1;
-                    if (quickX == 0)
-                        quickX += ballChange[0];
-                    b.destroy();
+                if ((check = bval.checkCollision(pval)) == Interval.BOTTOM) {
+                    ballChange[1] = Math.abs(ballChange[1]) * -1;
+                    score += b.destroy();
+                } else if (check == Interval.TOP) {
+                    ballChange[1] = Math.abs(ballChange[1]);
+                    score += b.destroy();
+                } else if (check == Interval.LEFT) {
+                    ballChange[0] = Math.abs(ballChange[0]) * -1;
+                    score += b.destroy();
+                } else if (check == Interval.RIGHT) {
+                    ballChange[0] = Math.abs(ballChange[0]);
+                    score += b.destroy();
                 }
             }
         }
 
-        pos.changeXY(ballChange[0] + quickX, ballChange[1] + quickY);
+        pos.changeXY(ballChange[0], ballChange[1]);
     }
 
     public Ball getBall() {

@@ -16,7 +16,7 @@ public class Breakout {
         frame.setSize(640,480);
         frame.setFocusable(false);
 
-        Ball ball = new Ball(20, 40, 300);
+        Ball ball = new Ball(20);
         Paddle paddle = new Paddle(100, 15, 50);
 
         BreakoutPanel breakoutPanel = new BreakoutPanel(ball, paddle);

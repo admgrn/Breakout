@@ -14,6 +14,6 @@ public class BlockStrong extends BlockAbstract {
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        setBackground(Color.CYAN);
+        setBackground(Color.gray);
     }
 }

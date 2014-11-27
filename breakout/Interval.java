@@ -2,8 +2,10 @@ package breakout;
 
 public class Interval {
     public static int NONE = 0;
-    public static int SIDE = 1;
-    public static int TOPBOTTOM = 2;
+    public static int LEFT = 1;
+    public static int RIGHT = 2;
+    public static int TOP = 3;
+    public static int BOTTOM = 4;
 
     private int x1, x2;
     private int y1, y2;
@@ -33,9 +35,21 @@ public class Interval {
         }
 
         if (width > height) {
-            return TOPBOTTOM;
+            int a = (y1 + y2) / 2;
+            int b = (interval.y1 + interval.y2) / 2;
+            if (a > b) {
+                return TOP;
+            } else {
+                return BOTTOM;
+            }
         } else {
-            return SIDE;
+            int a = (x1 + x2) / 2;
+            int b = (interval.x1 + interval.x2) / 2;
+            if (a > b) {
+                return RIGHT;
+            } else {
+                return LEFT;
+            }
         }
     }
 

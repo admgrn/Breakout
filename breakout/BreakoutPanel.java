@@ -87,14 +87,15 @@ public class BreakoutPanel extends JPanel implements KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         revalidate();
-
         this.ball.setBounds(0, 0, getWidth(), getHeight());
         this.paddle.setBounds(0, getHeight() - this.paddle.getHeight(), getWidth(), this.paddle.getHeight());
         this.blocks.setBounds(0, 0, getWidth(), getHeight() / 3);
+
         if (this.rightDown) {
             this.paddle.changeDelta(1);
         } else if (this.leftDown) {
             this.paddle.changeDelta(-1);
         }
+        paddle.updatePosition();
     }
 }

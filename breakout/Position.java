@@ -17,6 +17,11 @@ public class Position {
         return y;
     }
 
+    public void setPosition(Position position) {
+        x = position.x;
+        y = position.y;
+    }
+
     public void changeXY(int dx, int dy) {
         x += dx;
         y += dy;
