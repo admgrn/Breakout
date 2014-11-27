@@ -89,6 +89,8 @@ public class GameManager implements ActionListener {
         ball.setPosition(currentGame.getStart());
         ballChange.setTrans(new Transform(0, 0));
         state = BALLPAUSE;
+        mainPanel.ballPause();
+
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -103,6 +105,7 @@ public class GameManager implements ActionListener {
         }
 
         updateBallPosition();
+        mainPanel.updateCascade();
         mainPanel.repaint();
     }
 
@@ -138,33 +141,51 @@ public class GameManager implements ActionListener {
             ballChange.y = Math.abs(ballChange.y);
         }
 
+        int val;
+
         LinkedList<BlockAbstract> block = currentGame.getBlocks();
         for (Iterator<BlockAbstract> it = block.iterator(); it.hasNext(); ) {
             BlockAbstract b = it.next();
 
-            if (b. isVis()) {
+            if (b.isVis()) {
                 pval = b.getInterval();
 
                 if ((check = bval.checkCollision(pval)) == Interval.BOTTOM) {
                     ballChange.y = Math.abs(ballChange.y) * -1;
-                    score += b.destroy();
-                    if (!b.isVis())
+                    val = b.destroy();
+                    score += val;
+
+                    if (b.isDestroyable()) {
+                        mainPanel.madeScore(val, b.getBounds());
                         it.remove();
+                    }
                 } else if (check == Interval.TOP) {
                     ballChange.y = Math.abs(ballChange.y);
-                    score += b.destroy();
-                    if (!b.isVis())
+                    val = b.destroy();
+                    score += val;
+
+                    if (b.isDestroyable()) {
+                        mainPanel.madeScore(val, b.getBounds());
                         it.remove();
+                    }
                 } else if (check == Interval.LEFT) {
                     ballChange.x = Math.abs(ballChange.x) * -1;
-                    score += b.destroy();
-                    if (!b.isVis())
+                    val = b.destroy();
+                    score += val;
+
+                    if (b.isDestroyable()) {
+                        mainPanel.madeScore(val, b.getBounds());
                         it.remove();
+                    }
                 } else if (check == Interval.RIGHT) {
                     ballChange.x = Math.abs(ballChange.x);
-                    score += b.destroy();
-                    if (!b.isVis())
+                    val = b.destroy();
+                    score += val;
+
+                    if (b.isDestroyable()) {
+                        mainPanel.madeScore(val, b.getBounds());
                         it.remove();
+                    }
                 }
             }
         }

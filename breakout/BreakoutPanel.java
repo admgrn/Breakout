@@ -1,9 +1,12 @@
 package breakout;
 
+import org.w3c.dom.css.Rect;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class BreakoutPanel extends JPanel implements KeyListener {
@@ -16,6 +19,8 @@ public class BreakoutPanel extends JPanel implements KeyListener {
     private boolean rightDown = false;
     private boolean isPaused = true;
 
+    private LinkedList<JLabel> scoreCascade;
+
     private JLayeredPane layers;
 
     public BreakoutPanel(Ball ball, Paddle paddle) {
@@ -26,6 +31,7 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         this.instruct = new JLabel("Press Spacebar to begin");
         this.instruct.setOpaque(false);
         this.instruct.setHorizontalAlignment(SwingConstants.CENTER);
+        this.scoreCascade = new LinkedList<JLabel>();
 
         setLayout(new BorderLayout());
 
@@ -95,6 +101,22 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         }
     }
 
+    public void ballPause() {
+        layers.add(instruct, new Integer(80));
+    }
+
+    public void madeScore(int value, Rectangle rect) {
+        String text = Integer.toString(value);
+
+        JLabel visibleLabel = new JLabel(text);
+        visibleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        visibleLabel.setBounds(rect);
+
+        this.scoreCascade.add(visibleLabel);
+
+        layers.add(visibleLabel, new Integer(80));
+    }
+
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         revalidate();
@@ -108,7 +130,23 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         } else if (this.leftDown) {
             this.paddle.changeDelta(-1);
         }
-        paddle.updatePosition();
+        this.paddle.updatePosition();
+
+    }
+
+    public void updateCascade() {
+        for (Iterator<JLabel> it = scoreCascade.iterator(); it.hasNext(); ) {
+            JLabel lab = it.next();
+            Rectangle rect = lab.getBounds();
+            rect.translate(0, 4);
+            lab.setBounds(rect);
+
+            if (rect.getY() > getHeight()) {
+                layers.remove(lab);
+                it.remove();
+            }
+
+        }
     }
 
     public boolean isPaused() {

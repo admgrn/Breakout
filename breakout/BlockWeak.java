@@ -29,7 +29,7 @@ public class BlockWeak extends BlockAbstract {
 
     public int destroy() {
         vis = false;
-        return 10;
+        return weight;
     }
 
     protected void paintComponent(Graphics g) {
