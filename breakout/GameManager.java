@@ -7,12 +7,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Vector;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GameManager implements ActionListener {
+    public final static int STOPPED = 0;
+    public final static int RUNNING = 1;
+    public final static int WIN = 2;
+    public final static int LOSS = 3;
+    public final static int PAUSED = 4;
+    public final static int GOINGTONEXTLEVEL = 5;
+    public final static int BALLPAUSE = 6;
+
     private BreakoutPanel mainPanel;
 
-    private Level[] levels;
+    private Vector<Level> levels;
 
     private Level currentGame;
     private Ball ball;
@@ -22,9 +36,11 @@ public class GameManager implements ActionListener {
     private int score = 0;
     private int lives = 3;
 
+    private int state = STOPPED;
+
     private Timer timer;
 
-    private int[] ballChange = new int[2];
+    private Transform ballChange = new Transform();
 
     public GameManager(Ball ball, Paddle paddle, BreakoutPanel mainPanel) {
         this.ball = ball;
@@ -32,48 +48,60 @@ public class GameManager implements ActionListener {
         this.mainPanel = mainPanel;
 
         this.timer = new Timer(10, this);
-
+        this.levels = LevelPackage.GetStandardLevels();
         newGame();
     }
 
-
-    public void newGame() {
-        // TODO
-        ballChange[0] = 2;
-        ballChange[1] = 4;
-
-        Level level = new Level(2, 5, new Position(30, 300));
-        LinkedList<BlockAbstract> b = level.getBlocks();
-        b.add(new BlockWeak(50));
-        b.add(new BlockWeak(20));
-        b.add(new BlockWeak(30));
-        b.add(new BlockWeak(40));
-        b.add(new BlockWeak(false));
-        b.add(new BlockWeak(10));
-        b.add(new BlockStrong());
-        b.add(new BlockWeak(10));
-        b.add(new BlockWeak(100));
-        b.add(new BlockWeak(70));
-        currentGame = level;
-        mainPanel.setLevel(level);
-
-        ball.setPosition(level.getStart());
+    public void togglePauseBall() {
+        if (state == BALLPAUSE) {
+            state = RUNNING;
+            ballChange.setTrans(currentGame.getStartTransform());
+        }
     }
 
+    public void newGame() {
+        currentLevel = 0;
+        currentGame = levels.elementAt(0);
+        mainPanel.setLevel(currentGame);
+        ball.setPosition(currentGame.getStart());
+        ballChange.setTrans(new Transform(0, 0));
+    }
 
     public void startGame() {
         timer.start();
+        state = BALLPAUSE;
     }
 
     public void clearGame() {
         // TODO
     }
 
+    public void nextLevel() {
+        ++currentLevel;
+        currentGame = levels.elementAt(currentLevel);
+        mainPanel.setLevel(currentGame);
+        ball.setPosition(currentGame.getStart());
+        ballChange.setTrans(new Transform(0, 0));
+        startGame();
+    }
+
     public void lostLife() {
         ball.setPosition(currentGame.getStart());
+        ballChange.setTrans(new Transform(0, 0));
+        state = BALLPAUSE;
     }
 
     public void actionPerformed(ActionEvent e) {
+        if (state == WIN) {
+            state = GOINGTONEXTLEVEL;
+            ScheduledExecutorService stopLevel = Executors.newSingleThreadScheduledExecutor();
+            stopLevel.schedule(new Runnable() {
+                public void run() {
+                    nextLevel();
+                }
+            }, 2, TimeUnit.SECONDS);
+        }
+
         updateBallPosition();
         mainPanel.repaint();
     }
@@ -85,14 +113,14 @@ public class GameManager implements ActionListener {
         Position pos = ball.getPosition();
 
         if (pos.getX() + ball.getDiameter() >= maxX) {
-            ballChange[0] = Math.abs(ballChange[0]) * -1;
+            ballChange.x = Math.abs(ballChange.x) * -1;
         } else if (pos.getX() <= 0) {
-            ballChange[0] = Math.abs(ballChange[0]);
+            ballChange.x = Math.abs(ballChange.x);
         }
 
         if (pos.getY() <= 0) {
-            ballChange[1] = ballChange[1] * -1;
-        } else if (pos.getY() + ball.getDiameter() >= maxY) {
+            ballChange.y = ballChange.y * -1;
+        } else if (pos.getY() + ball.getDiameter() >= maxY && state == RUNNING) {
             lostLife();
         }
 
@@ -101,38 +129,51 @@ public class GameManager implements ActionListener {
         int check;
 
         if ((check = bval.checkCollision(pval)) == Interval.BOTTOM) {
-            ballChange[1] = Math.abs(ballChange[1]) * -1;
+            ballChange.y = Math.abs(ballChange.y) * -1;
         } else if (check == Interval.TOP) {
-            ballChange[1] = Math.abs(ballChange[1]);
+            ballChange.y = Math.abs(ballChange.y);
         } else if (check == Interval.LEFT) {
-            ballChange[0] = Math.abs(ballChange[0]) * -1;
+            ballChange.y = Math.abs(ballChange.y) * -1;
         } else if (check == Interval.RIGHT) {
-            ballChange[0] = Math.abs(ballChange[0]);
+            ballChange.y = Math.abs(ballChange.y);
         }
 
         LinkedList<BlockAbstract> block = currentGame.getBlocks();
+        for (Iterator<BlockAbstract> it = block.iterator(); it.hasNext(); ) {
+            BlockAbstract b = it.next();
 
-        for (BlockAbstract b : block) {
-            if (b.isVis()) {
+            if (b. isVis()) {
                 pval = b.getInterval();
 
                 if ((check = bval.checkCollision(pval)) == Interval.BOTTOM) {
-                    ballChange[1] = Math.abs(ballChange[1]) * -1;
+                    ballChange.y = Math.abs(ballChange.y) * -1;
                     score += b.destroy();
+                    if (!b.isVis())
+                        it.remove();
                 } else if (check == Interval.TOP) {
-                    ballChange[1] = Math.abs(ballChange[1]);
+                    ballChange.y = Math.abs(ballChange.y);
                     score += b.destroy();
+                    if (!b.isVis())
+                        it.remove();
                 } else if (check == Interval.LEFT) {
-                    ballChange[0] = Math.abs(ballChange[0]) * -1;
+                    ballChange.x = Math.abs(ballChange.x) * -1;
                     score += b.destroy();
+                    if (!b.isVis())
+                        it.remove();
                 } else if (check == Interval.RIGHT) {
-                    ballChange[0] = Math.abs(ballChange[0]);
+                    ballChange.x = Math.abs(ballChange.x);
                     score += b.destroy();
+                    if (!b.isVis())
+                        it.remove();
                 }
             }
         }
 
-        pos.changeXY(ballChange[0], ballChange[1]);
+        pos.changeXY(ballChange.x, ballChange.y);
+
+        if (currentGame.didWin()) {
+            state = WIN;
+        }
     }
 
     public Ball getBall() {
@@ -159,11 +200,11 @@ public class GameManager implements ActionListener {
         this.currentGame = currentGame;
     }
 
-    public Level[] getLevels() {
+    public Vector<Level> getLevels() {
         return levels;
     }
 
-    public void setLevels(Level[] levels) {
+    public void setLevels(Vector<Level> levels) {
         this.levels = levels;
     }
 
@@ -189,5 +230,9 @@ public class GameManager implements ActionListener {
 
     public void setCurrentLevel(int currentLevel) {
         this.currentLevel = currentLevel;
+    }
+
+    public int getState() {
+        return state;
     }
 }

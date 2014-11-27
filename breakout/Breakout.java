@@ -24,6 +24,7 @@ public class Breakout {
         GameManager manager = new GameManager(ball, paddle, breakoutPanel);
         manager.startGame();
 
+        breakoutPanel.setManager(manager);
         breakoutPanel.setFocusable(true);
 
         frame.add(breakoutPanel);

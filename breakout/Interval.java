@@ -1,11 +1,11 @@
 package breakout;
 
 public class Interval {
-    public static int NONE = 0;
-    public static int LEFT = 1;
-    public static int RIGHT = 2;
-    public static int TOP = 3;
-    public static int BOTTOM = 4;
+    public final static int NONE = 0;
+    public final static int LEFT = 1;
+    public final static int RIGHT = 2;
+    public final static int TOP = 3;
+    public final static int BOTTOM = 4;
 
     private int x1, x2;
     private int y1, y2;

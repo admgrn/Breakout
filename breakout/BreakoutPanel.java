@@ -1,8 +1,5 @@
 package breakout;
 
-import sun.awt.image.ImageWatched;
-import sun.jvm.hotspot.opto.Block;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -11,10 +8,13 @@ import java.util.LinkedList;
 
 public class BreakoutPanel extends JPanel implements KeyListener {
     private Ball ball;
+    private GameManager manager = null;
     private Paddle paddle;
     private JPanel blocks;
+    private JLabel instruct;
     private boolean leftDown = false;
     private boolean rightDown = false;
+    private boolean isPaused = true;
 
     private JLayeredPane layers;
 
@@ -23,6 +23,9 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         this.ball = ball;
         this.paddle = paddle;
         this.blocks = new JPanel();
+        this.instruct = new JLabel("Press Spacebar to begin");
+        this.instruct.setOpaque(false);
+        this.instruct.setHorizontalAlignment(SwingConstants.CENTER);
 
         setLayout(new BorderLayout());
 
@@ -38,15 +41,19 @@ public class BreakoutPanel extends JPanel implements KeyListener {
     }
 
     public void setLevel(Level level) {
-        blocks = new JPanel(new GridLayout(level.getSize().getWidth(), level.getSize().getHeight(), 5, 5));
+        JPanel oldBlock = blocks;
 
+        blocks = new JPanel(new GridLayout(level.getSize().getWidth(), level.getSize().getHeight(), 5, 5));
+        blocks.setOpaque(false);
         LinkedList<BlockAbstract> blockList = level.getBlocks();
 
         for (BlockAbstract b : blockList) {
             blocks.add(b);
         }
-        layers.remove(blocks);
+        layers.remove(oldBlock);
         layers.add(blocks, new Integer(10));
+
+        layers.add(instruct, new Integer(70));
     }
 
     public void keyTyped(KeyEvent e) {
@@ -64,6 +71,10 @@ public class BreakoutPanel extends JPanel implements KeyListener {
             case KeyEvent.VK_RIGHT:
                 paddle.changeDelta(1);
                 rightDown = true;
+                break;
+            case KeyEvent.VK_SPACE:
+                manager.togglePauseBall();
+                layers.remove(instruct);
                 break;
             default:
                 break;
@@ -90,6 +101,7 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         this.ball.setBounds(0, 0, getWidth(), getHeight());
         this.paddle.setBounds(0, getHeight() - this.paddle.getHeight(), getWidth(), this.paddle.getHeight());
         this.blocks.setBounds(0, 0, getWidth(), getHeight() / 3);
+        this.instruct.setBounds(0, 0, getWidth(), getHeight());
 
         if (this.rightDown) {
             this.paddle.changeDelta(1);
@@ -97,5 +109,17 @@ public class BreakoutPanel extends JPanel implements KeyListener {
             this.paddle.changeDelta(-1);
         }
         paddle.updatePosition();
+    }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public void setPaused(boolean isPaused) {
+        this.isPaused = isPaused;
+    }
+
+    public void setManager(GameManager manager) {
+        this.manager = manager;
     }
 }
