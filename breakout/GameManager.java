@@ -192,7 +192,7 @@ public class GameManager implements ActionListener {
 
         pos.changeXY(ballChange.x, ballChange.y);
 
-        if (currentGame.didWin()) {
+        if (currentGame.didWin() && state != WIN && state != GOINGTONEXTLEVEL) {
             state = WIN;
         }
     }
