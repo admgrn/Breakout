@@ -16,15 +16,15 @@ public class Breakout {
         frame.setSize(640,480);
         frame.setFocusable(false);
 
-        Ball ball = new Ball(20, 10, 10);
-        Paddle paddle = new Paddle(100, 10, 50);
-
-        GameManager manager = new GameManager(ball, paddle);
-
+        Ball ball = new Ball(20, 40, 300);
+        Paddle paddle = new Paddle(100, 15, 50);
 
         BreakoutPanel breakoutPanel = new BreakoutPanel(ball, paddle);
-        //breakoutPanel.setFocusable(true);
-        //breakoutPanel.addKeyListener(breakoutPanel);
+
+        GameManager manager = new GameManager(ball, paddle, breakoutPanel);
+        manager.startGame();
+
+        breakoutPanel.setFocusable(true);
 
         frame.add(breakoutPanel);
         frame.setVisible(true);

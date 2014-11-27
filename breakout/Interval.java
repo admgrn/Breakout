@@ -1,0 +1,57 @@
+package breakout;
+
+public class Interval {
+    public static int NONE = 0;
+    public static int SIDE = 1;
+    public static int TOPBOTTOM = 2;
+
+    private int x1, x2;
+    private int y1, y2;
+
+    public Interval(int x1, int y1, int x2, int y2) {
+        this.x1 = x1;
+        this.x2 = x2;
+        this.y1 = y1;
+        this.y2 = y2;
+    }
+
+    public int checkCollision(Interval interval) {
+        int width;
+        int height;
+
+        if (x1 <= interval.x2 && x2 >= interval.x1) {
+
+            width = Math.min(x2, interval.x2) - Math.max(x1, interval.x1);
+        } else {
+            return NONE;
+        }
+
+        if (y1 <= interval.y2 && y2 >= interval.y1) {
+            height = Math.min(y2, interval.y2) - Math.max(y1, interval.y1);
+        } else {
+            return NONE;
+        }
+
+        if (width > height) {
+            return TOPBOTTOM;
+        } else {
+            return SIDE;
+        }
+    }
+
+    public int getY2() {
+        return y2;
+    }
+
+    public int getX1() {
+        return x1;
+    }
+
+    public int getX2() {
+        return x2;
+    }
+
+    public int getY1() {
+        return y1;
+    }
+}
