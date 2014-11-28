@@ -5,12 +5,9 @@ import sun.nio.cs.ext.MacThai;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Vector;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -25,6 +22,7 @@ public class GameManager implements ActionListener {
     public final static int BALLPAUSE = 6;
 
     private BreakoutPanel mainPanel;
+    private ScorePanel scorePanel;
 
     private Vector<Level> levels;
 
@@ -42,10 +40,11 @@ public class GameManager implements ActionListener {
 
     private Transform ballChange = new Transform();
 
-    public GameManager(Ball ball, Paddle paddle, BreakoutPanel mainPanel) {
+    public GameManager(Ball ball, Paddle paddle, BreakoutPanel mainPanel, ScorePanel scorePanel) {
         this.ball = ball;
         this.paddle = paddle;
         this.mainPanel = mainPanel;
+        this.scorePanel = scorePanel;
 
         this.timer = new Timer(10, this);
         this.levels = LevelPackage.GetStandardLevels();
@@ -190,6 +189,7 @@ public class GameManager implements ActionListener {
             }
         }
 
+        scorePanel.updateScore(score);
         pos.changeXY(ballChange.x, ballChange.y);
 
         if (currentGame.didWin() && state != WIN && state != GOINGTONEXTLEVEL) {

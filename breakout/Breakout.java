@@ -1,9 +1,6 @@
 package breakout;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JFrame;
@@ -13,21 +10,24 @@ public class Breakout {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Breakout");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(640,480);
+        frame.setSize(740, 480);
         frame.setFocusable(false);
+        frame.setLayout(new BorderLayout());
 
         Ball ball = new Ball(20);
         Paddle paddle = new Paddle(100, 15, 50);
 
         BreakoutPanel breakoutPanel = new BreakoutPanel(ball, paddle);
+        ScorePanel scorePanel = new ScorePanel();
 
-        GameManager manager = new GameManager(ball, paddle, breakoutPanel);
+        GameManager manager = new GameManager(ball, paddle, breakoutPanel, scorePanel);
         manager.startGame();
 
         breakoutPanel.setManager(manager);
         breakoutPanel.setFocusable(true);
 
-        frame.add(breakoutPanel);
+        frame.add(breakoutPanel, BorderLayout.CENTER);
+        frame.add(scorePanel, BorderLayout.EAST);
         frame.setVisible(true);
 
         breakoutPanel.requestFocusInWindow();
