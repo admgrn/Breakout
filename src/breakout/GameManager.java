@@ -93,6 +93,7 @@ public class GameManager implements ActionListener {
         ball.setPosition(currentGame.getStart());
         ballChange.setTrans(new Transform(0, 0));
         scorePanel.updateLives(lives);
+        
         if (lives == 0) {
             state = LOSS;
             mainPanel.gameOver();
@@ -200,7 +201,11 @@ public class GameManager implements ActionListener {
                 }
             }
         }
- 
+        
+        if (score % 1000 == 0 && score != 0) {
+            ++lives;
+            scorePanel.updateLives(lives);
+        }
         scorePanel.updateScore(score);
         pos.changeXY(ballChange.x, ballChange.y);
  

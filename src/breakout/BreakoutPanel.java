@@ -69,20 +69,26 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_LEFT:
-                paddle.changeDelta(-1);
-                leftDown = true;
+                if (!isPaused) {
+                    paddle.changeDelta(-1);
+                    leftDown = true;
+                }
                 break;
             case KeyEvent.VK_RIGHT:
-                paddle.changeDelta(1);
-                rightDown = true;
+                if (!isPaused) {
+                    paddle.changeDelta(1);
+                    rightDown = true;
+                }
                 break;
             case KeyEvent.VK_SPACE:
+                isPaused = false;
                 manager.togglePauseBall();
                 layers.remove(instruct);
                 break;
             case KeyEvent.VK_ESCAPE:
                 System.out.println("Escape key");
                 manager.setState(manager.PAUSED);
+                Breakout.changeCard("Pause Menu");
                 break;
             default:
                 break;
