@@ -100,7 +100,7 @@ public class GameManager implements ActionListener {
                 public void run() {
                     nextLevel();
                 }
-            }, 2, TimeUnit.SECONDS);
+            }, 100, TimeUnit.MILLISECONDS);
         }
 
         updateBallPosition();
@@ -134,10 +134,10 @@ public class GameManager implements ActionListener {
             ballChange.y = Math.abs(ballChange.y) * -1;
         } else if (check == Interval.TOP) {
             ballChange.y = Math.abs(ballChange.y);
-        } else if (check == Interval.LEFT) {
-            ballChange.y = Math.abs(ballChange.y) * -1;
+         } else if (check == Interval.LEFT) {
+            ballChange.x = paddle.getDelta() - 1;
         } else if (check == Interval.RIGHT) {
-            ballChange.y = Math.abs(ballChange.y);
+            ballChange.x = paddle.getDelta() + 1;
         }
 
         int val;

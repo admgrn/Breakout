@@ -68,6 +68,10 @@ public class Paddle extends JPanel implements PositionInterval {
         offset += (delta / 3);
     }
 
+    public int getDelta() {
+        return delta / 3;
+    }
+
     public int getOffset() {
         return offset;
     }
