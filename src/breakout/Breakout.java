@@ -23,17 +23,18 @@ public class Breakout {
         cards = new JPanel(new CardLayout());
         mainPanel = new JPanel(new BorderLayout());
  
-        Ball ball = new Ball(20);
-        Paddle paddle = new Paddle(100, 15, 50);
+        Ball ball = new Ball();
+        Paddle paddle = new Paddle();
  
-        BreakoutPanel breakoutPanel = new BreakoutPanel(ball, paddle);
+        final BreakoutPanel breakoutPanel = new BreakoutPanel(ball, paddle);
         ScorePanel scorePanel = new ScorePanel();
+
+        GameManager manager = new GameManager(ball, paddle, breakoutPanel, scorePanel);
         
-        MainMenu mainMenu = new MainMenu();
+        MainMenu mainMenu = new MainMenu(manager);
         GameOver gameOver = new GameOver();
         PauseMenu pauseMenu = new PauseMenu();
- 
-        GameManager manager = new GameManager(ball, paddle, breakoutPanel, scorePanel);
+
         manager.startGame();
  
         breakoutPanel.setManager(manager);
@@ -41,12 +42,15 @@ public class Breakout {
         
         mainPanel.add(breakoutPanel, BorderLayout.CENTER);
         mainPanel.add(scorePanel, BorderLayout.EAST);
+
+        final LevelEditor editor = new LevelEditor();
         
         cards.add(mainMenu, "Main Menu");
         cards.add(mainPanel, "Breakout");
         cards.add(gameOver, "Game Over");
         cards.add(pauseMenu, "Pause Menu");
- 
+        cards.add(editor, "Level Editor");
+
         //frame.add(breakoutPanel, BorderLayout.CENTER);
         //frame.add(scorePanel, BorderLayout.EAST);
         frame.add(cards);
@@ -60,6 +64,12 @@ public class Breakout {
         mainPanel.addComponentListener(new ComponentAdapter() {
             public void componentShown(ComponentEvent e) {
                 breakoutPanel.requestFocusInWindow();
+            }
+        });
+
+        editor.addComponentListener(new ComponentAdapter() {
+            public void componentShown(ComponentEvent e) {
+                editor.requestFocusInWindow();
             }
         });
     }

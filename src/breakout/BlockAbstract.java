@@ -22,4 +22,6 @@ public abstract class BlockAbstract extends JPanel implements PositionInterval {
     }
 
     public abstract int destroy();
+
+    public abstract BlockAbstract copy();
 }

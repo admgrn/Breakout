@@ -28,6 +28,16 @@ public class Level {
         blocks.add(block);
     }
 
+    public BlockAbstract popBlock() {
+        BlockAbstract block = blocks.pop();
+
+        if (block.isDestroyable() && block.isVis()) {
+            --remaining;
+        }
+        --maxCount;
+        return block;
+    }
+
     public boolean didWin() {
         if (maxCount - blocks.size() >= remaining)
             return true;

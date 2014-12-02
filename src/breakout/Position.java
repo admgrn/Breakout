@@ -9,6 +9,11 @@ public class Position {
         this.y = y;
     }
 
+    public Position(Position position) {
+        this.x = position.x;
+        this.y = position.y;
+    }
+
     public int getX() {
         return x;
     }
@@ -21,7 +26,6 @@ public class Position {
         x = position.x;
         y = position.y;
     }
-
     public void changeXY(int dx, int dy) {
         x += dx;
         y += dy;

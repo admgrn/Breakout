@@ -12,6 +12,10 @@ public class BlockStrong extends BlockAbstract {
         return 0;
     }
 
+    public BlockAbstract copy() {
+        return new BlockStrong();
+    }
+
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         setBackground(Color.gray);

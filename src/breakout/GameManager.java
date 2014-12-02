@@ -1,7 +1,5 @@
 package breakout;
  
-import sun.nio.cs.ext.MacThai;
- 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +30,8 @@ public class GameManager implements ActionListener {
  
     private int currentLevel = 0;
     private int score = 0;
-    private int lives = 3;
+    private int startLives = 3;
+    private int lives = startLives;
  
     private int state = STOPPED;
  
@@ -47,7 +46,6 @@ public class GameManager implements ActionListener {
         this.scorePanel = scorePanel;
  
         this.timer = new Timer(10, this);
-        this.levels = LevelPackage.GetStandardLevels();
         newGame();
     }
  
@@ -59,6 +57,11 @@ public class GameManager implements ActionListener {
     }
  
     public void newGame() {
+        this.levels = LevelPackage.getCurrentLevels(true);
+        lives = startLives;
+        score = 0;
+        scorePanel.updateScore(score);
+        scorePanel.updateLives(lives);
         currentLevel = 0;
         currentGame = levels.elementAt(0);
         mainPanel.setLevel(currentGame);
@@ -94,7 +97,7 @@ public class GameManager implements ActionListener {
         ballChange.setTrans(new Transform(0, 0));
         scorePanel.updateLives(lives);
         
-        if (lives == 0) {
+        if (lives <= 0) {
             state = LOSS;
             mainPanel.gameOver();
             gameOver();

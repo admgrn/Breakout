@@ -11,10 +11,14 @@ public class MainMenu extends JPanel implements MouseListener {
     private final JButton loadGame = new JButton("Load Game");
     private final JButton options = new JButton("Options");
     private final JButton quitGame = new JButton("Quit Game");
+    private final JButton levelEditor = new JButton("Level Editor");
+    private final GameManager game;
     
-    public MainMenu() {
+    public MainMenu(GameManager game) {
         this.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
+
+        this.game = game;
         
         this.setBackground(Color.LIGHT_GRAY);
         breakout.setFont(titleFont);
@@ -37,14 +41,19 @@ public class MainMenu extends JPanel implements MouseListener {
         constraints.fill = GridBagConstraints.CENTER;
         constraints.gridy = 5;
         this.add(options, constraints);
-        
+
         constraints.fill = GridBagConstraints.CENTER;
         constraints.gridy = 6;
+        this.add(levelEditor, constraints);
+
+        constraints.fill = GridBagConstraints.CENTER;
+        constraints.gridy = 7;
         this.add(quitGame, constraints);
         
         newGame.addMouseListener(this);
         loadGame.addMouseListener(this);
         options.addMouseListener(this);
+        levelEditor.addMouseListener(this);
         quitGame.addMouseListener(this);
     }
 
@@ -52,6 +61,8 @@ public class MainMenu extends JPanel implements MouseListener {
         JButton clicked = (JButton)e.getSource();
         switch(clicked.getText()) {
             case "New Game":
+                game.newGame();
+                game.startGame();
                 Breakout.changeCard("Breakout");
                 break;
             case "Load Game":
@@ -59,6 +70,9 @@ public class MainMenu extends JPanel implements MouseListener {
                 break;
             case "Options":
                 // TODO implement options menu
+                break;
+            case "Level Editor":
+                Breakout.changeCard("Level Editor");
                 break;
             case "Quit Game":
                 Container frame = clicked.getParent();
@@ -68,6 +82,7 @@ public class MainMenu extends JPanel implements MouseListener {
                 while (!(frame instanceof JFrame));
                 ((JFrame)frame).dispose();
                 // Ensure this actually exits
+                System.exit(0);
                 break;
             default:
                 break;

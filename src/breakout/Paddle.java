@@ -11,6 +11,10 @@ public class Paddle extends JPanel implements PositionInterval {
     private float deltaMax = 20;
     private int padding = 10;
 
+    public Paddle() {
+        this(100, 15, 50);
+    }
+
     public Paddle(int width, int height, int offset) {
         super();
         this.size = new Size(width, height);

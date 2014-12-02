@@ -13,6 +13,11 @@ public class Transform {
         this.y = y;
     }
 
+    public Transform(Transform trans) {
+        this.x = trans.x;
+        this.y = trans.y;
+    }
+
     public void setTrans(Transform a) {
         x = a.x;
         y = a.y;

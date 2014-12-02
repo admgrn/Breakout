@@ -8,20 +8,20 @@ import java.io.File;
 
 public class Ball extends JPanel implements PositionInterval {
     private int diameter;
-
     private Position position;
     private BufferedImage image;
 
-    public Ball(int diameter) {
+    public Ball() {
         super();
-        this.diameter = diameter;
         this.position = new Position(0, 0);
 
         try {
             image = ImageIO.read(Ball.class.getResource("../images/ball.png"));
         } catch (Exception e) {
-            System.out.print(e.getMessage());
+            // TODO Error handel
         }
+
+        this.diameter = image.getHeight();
 
         setOpaque(false);
     }
