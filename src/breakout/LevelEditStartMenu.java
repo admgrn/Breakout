@@ -1,7 +1,6 @@
 package breakout;
 
 import javax.swing.*;
-import javax.swing.text.html.ObjectView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,19 +24,7 @@ public class LevelEditStartMenu extends JPanel implements MouseListener, ActionL
 
         GridBagConstraints constraints = new GridBagConstraints();
 
-        insertNew.addItem("Insert After Level");
-        editLevel.addItem("Select Level To Edit");
-
-        Vector<Level> levels = LevelPackage.getCurrentLevels(false);
-        insertNew.addItem(0);
-
-        int i = 1;
-
-        for (Level l: levels) {
-            insertNew.addItem(i);
-            editLevel.addItem(i);
-            ++i;
-        }
+        setLevels();
 
         constraints.fill = GridBagConstraints.CENTER;
         constraints.gridy = 1;
@@ -68,6 +55,25 @@ public class LevelEditStartMenu extends JPanel implements MouseListener, ActionL
         editLevel.addActionListener(this);
     }
 
+    public void setLevels() {
+        insertNew.removeAllItems();
+        editLevel.removeAllItems();
+
+        insertNew.addItem("Insert After Level");
+        editLevel.addItem("Select Level To Edit");
+
+        Vector<Level> levels = LevelPackage.getCurrentLevels(false);
+        insertNew.addItem(0);
+
+        int i = 1;
+
+        for (Level l: levels) {
+            insertNew.addItem(i);
+            editLevel.addItem(i);
+            ++i;
+        }
+    }
+
     public void actionPerformed(ActionEvent e) {
         JComboBox box = (JComboBox)e.getSource();
 
@@ -75,7 +81,8 @@ public class LevelEditStartMenu extends JPanel implements MouseListener, ActionL
 
         if (index > 0) {
             if (box == insertNew) {
-
+                mainLevelEdit.insertLevelToEdit(index - 1);
+                mainLevelEdit.showCard("Main");
             } else {
                 mainLevelEdit.setLevelToEdit(index - 1);
                 mainLevelEdit.showCard("Main");
@@ -91,9 +98,9 @@ public class LevelEditStartMenu extends JPanel implements MouseListener, ActionL
                 break;
             case "Reset Levels":
                 LevelPackage.resetLevels();
+                setLevels();
                 break;
             default:
-                // error handling?
                 break;
         }
     }

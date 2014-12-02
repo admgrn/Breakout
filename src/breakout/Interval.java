@@ -1,5 +1,7 @@
 package breakout;
 
+import java.awt.*;
+
 public class Interval {
     public final static int NONE = 0;
     public final static int LEFT = 1;
@@ -51,6 +53,13 @@ public class Interval {
                 return LEFT;
             }
         }
+    }
+
+    public boolean isPointInside(Point point) {
+        if (x1 <= point.x && x2 >= point.x && y1 <= point.y && y2 >= point.y)
+            return true;
+        else
+            return false;
     }
 
     public int getY2() {

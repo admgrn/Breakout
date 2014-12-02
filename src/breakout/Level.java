@@ -57,8 +57,24 @@ public class Level {
         return blocks;
     }
 
+    public void updateRemainingAdd(BlockAbstract newBlock, BlockAbstract oldBlock) {
+        if (newBlock.isDestroyable() && newBlock.isVis()) {
+            if (!oldBlock.isDestroyable() || !oldBlock.isVis()) {
+                ++remaining;
+            }
+        } else {
+            if(oldBlock.isDestroyable() && oldBlock.isVis()) {
+                --remaining;
+            }
+        }
+    }
+
     public void setBlocks(LinkedList<BlockAbstract> blocks) {
         this.blocks = blocks;
+    }
+
+    public int getRemaining() {
+        return remaining;
     }
 
     public Position getStart() {

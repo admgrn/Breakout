@@ -42,6 +42,10 @@ public class BlockWeak extends BlockAbstract {
         return this;
     }
 
+    public int getWeight() {
+        return weight;
+    }
+
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Color color = new Color(weight, weight * 2, 255);

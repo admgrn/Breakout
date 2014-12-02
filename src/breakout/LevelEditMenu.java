@@ -15,6 +15,8 @@ public class LevelEditMenu extends JPanel implements ItemListener, MouseListener
     private JComboBox columnCount = new JComboBox();
     private JButton saveButton = new JButton("Save");
     private JButton discardButton = new JButton("Discard");
+    private JButton delete = new JButton("Delete Level");
+    private JButton help = new JButton("Help");
 
     private boolean noUpdate = false;
 
@@ -75,11 +77,25 @@ public class LevelEditMenu extends JPanel implements ItemListener, MouseListener
         constraints.weightx = 1;
         this.add(discardButton, constraints);
 
+        constraints.fill = GridBagConstraints.CENTER;
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.gridy = 8;
+        constraints.weightx = 1;
+        this.add(delete, constraints);
+
+        constraints.fill = GridBagConstraints.CENTER;
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.gridy = 9;
+        constraints.weightx = 1;
+        this.add(help, constraints);
+
         columnCount.addItemListener(this);
         rowCount.addItemListener(this);
 
         saveButton.addMouseListener(this);
         discardButton.addMouseListener(this);
+        delete.addMouseListener(this);
+        help.addMouseListener(this);
     }
 
     public void setRowsColumns(int rows, int columns) {
@@ -105,12 +121,22 @@ public class LevelEditMenu extends JPanel implements ItemListener, MouseListener
 
         switch (button.getText()) {
             case "Save":
-                editor.saveLevel(true);
-                editor.showCard("Level Edit Start");
+                if (editor.saveLevel(true))
+                    editor.showCard("Level Edit Start");
                 break;
             case "Discard":
                 editor.saveLevel(false);
                 editor.showCard("Level Edit Start");
+                break;
+            case "Delete Level":
+                if (editor.deleteLevel())
+                    editor.showCard("Level Edit Start");
+                break;
+            case "Help":
+                JOptionPane.showMessageDialog(editor, "1. Drag ball to start position\n" +
+                                                      "2. Click anywhere to adjust ball direction\n" +
+                                                      "3. Adjust rows on columns in the toolbox\n" +
+                                                      "4. Click on blocks to change settings");
                 break;
             default:
                 break;

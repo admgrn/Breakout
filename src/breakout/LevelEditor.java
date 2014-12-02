@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.Color;
 import java.awt.event.*;
 import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Vector;
 
 public class LevelEditor extends JPanel implements MouseMotionListener, MouseListener {
     private CardLayout card = new CardLayout();
@@ -23,8 +25,10 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
     private JLayeredPane layers = new JLayeredPane();
     private LevelEditStartMenu editStart = new LevelEditStartMenu(this);
     private LevelEditMenu editMenu = new LevelEditMenu(this);
+    private LevelBlockEdit blockEdit = new LevelBlockEdit(this);
 
-    Level editBlocks = new Level(3, 5, new Position(0, 0), new Transform(0, 0));
+    private Level editBlocks = new Level(3, 5, new Position(0, 0), new Transform(0, 0));
+    private ListIterator<BlockAbstract> currentBlock = null;
 
     private boolean newLevel = false;
     private int levelIndex = 0;
@@ -32,6 +36,8 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
     public LevelEditor() {
         super();
         setLayout(new CardLayout());
+
+        blockEdit.setVisible(false);
 
         grid.setBackground(new Color(224, 224, 224));
         ball.setPosition(new Position(200, 200));
@@ -44,6 +50,7 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
         layers.add(ball, new Integer(50));
         layers.add(paddle, new Integer(20));
         layers.add(editMenu, new Integer(100));
+        layers.add(blockEdit, new Integer(200));
 
         add(editStart, "Level Edit Start");
         add(layers, "Main");
@@ -60,6 +67,9 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
         this.ball.setBounds(0, 0, getWidth() - 100, getHeight());
         this.grid.setBounds(0, 0, getWidth() - 100, getHeight() / 3);
         this.paddle.setBounds(0, getHeight() - paddle.getHeight(), getWidth() - 100, paddle.getHeight());
+
+
+        this.blockEdit.setBounds(((getWidth() - 100) / 4), (getHeight() / 4), (getWidth() - 100) / 2, getHeight() / 2);
         this.editMenu.setBounds(paddle.getWidth(), 0, 100, getHeight());
 
         g.drawLine(startVector.x, startVector.y, endVector.x, endVector.y);
@@ -67,6 +77,27 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
 
     public void showCard(String name) {
         card.show(this, name);
+    }
+
+    public void insertLevelToEdit(int index) {
+        Vector<Level> levels = LevelPackage.getCurrentLevels(false);
+
+        if (index > levels.size())
+            index = levels.size();
+
+        ListIterator<Level> it = levels.listIterator();
+
+        for (int i = 0; i < index; ++i) {
+            it.next();
+        }
+
+        Level level = new Level(2, 4, new Position(300, 300), new Transform(4, 2));
+
+        for (int i = 0; i < 8; ++i)
+            level.addBlock(new BlockWeak(10));
+
+        it.add(level);
+        setLevelToEdit(index);
     }
 
     public void setLevelToEdit(int index) {
@@ -134,7 +165,11 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
         grid.repaint();
     }
 
-    public void saveLevel(boolean save) {
+    public boolean saveLevel(boolean save) {
+        if (save && editBlocks.getRemaining() < 1) {
+            JOptionPane.showMessageDialog(this, "You must have at least one breakable box!");
+            return false;
+        }
         updateLine(endVector, 4.5);
 
         Level level = new Level(gridLayout.getRows(), gridLayout.getColumns(), ball.getPosition(),
@@ -148,9 +183,12 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
         }
 
         if (!save)
-            return;
+            return true;
 
+        editStart.setLevels();
         LevelPackage.getCurrentLevels(false).setElementAt(level, levelIndex);
+
+        return true;
     }
 
     private void updateLine(Point mousePosition, double mag) {
@@ -167,9 +205,54 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
         }
     }
 
+    public void editBlock() {
+        blockEdit.setVisible(true);
+    }
+
+    public void updateEditedBlock(BlockAbstract block) {
+        blockEdit.setVisible(false);
+
+        if (block == null || currentBlock == null)
+            return;
+
+        for (BlockAbstract b : editBlocks.getBlocks()) {
+            grid.remove(b);
+        }
+
+        editBlocks.updateRemainingAdd(block, currentBlock.previous());
+        currentBlock.set(block);
+
+        for (BlockAbstract b : editBlocks.getBlocks()) {
+            grid.add(b);
+        }
+
+        validate();
+        repaint();
+        currentBlock = null;
+    }
+
+    public boolean deleteLevel() {
+        Vector<Level> levels = LevelPackage.getCurrentLevels(false);
+        if (levels.size() <= 1) {
+            JOptionPane.showMessageDialog(this, "Cannot Delete, this is the only level!");
+            return false;
+        }
+
+        if (JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this level?") != JOptionPane.YES_OPTION)
+            return false;
+
+        levels.remove(levelIndex);
+        editStart.setLevels();
+
+        return true;
+    }
+
     public void mousePressed(MouseEvent e) {
         Point mousePosition = e.getPoint();
         Interval ballInterval = this.ball.getInterval();
+
+        if(blockEdit.isVisible())
+            return;
 
         if (mousePosition.x >= ballInterval.getX1() && mousePosition.x <= ballInterval.getX2() &&
                 mousePosition.y >= ballInterval.getY1() && mousePosition.y <= ballInterval.getY2()) {
@@ -184,6 +267,9 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
 
     public void mouseDragged(MouseEvent e) {
         Point mousePosition = e.getPoint();
+
+        if (blockEdit.isVisible())
+            return;
 
         if (isDraggingBall) {
             int x = mousePosition.x - (ball.getDiameter() / 2);
@@ -217,6 +303,20 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
 
         repaint();
     }
+    public void mouseClicked(MouseEvent e) {
+        Point mousePosition = e.getPoint();
+
+        for (ListIterator<BlockAbstract> it = editBlocks.getBlocks().listIterator(); it.hasNext();) {
+            BlockAbstract b = it.next();
+
+            if (b.getInterval().isPointInside(mousePosition)) {
+                editBlock();
+                blockEdit.setBlockProperties(b);
+                currentBlock = it;
+                break;
+            }
+        }
+    }
 
     public void mouseReleased(MouseEvent e) {
         isDraggingBall = false;
@@ -227,6 +327,4 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
     public void mouseExited(MouseEvent e) {}
 
     public void mouseEntered(MouseEvent e) {}
-
-    public void mouseClicked(MouseEvent e) {}
 }
