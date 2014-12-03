@@ -11,13 +11,13 @@ import java.util.LinkedList;
  
 public class BreakoutPanel extends JPanel implements KeyListener {
     private Ball ball;
-    private static GameManager manager = null;
+    private GameManager manager = null;
     private Paddle paddle;
     private JPanel blocks;
     private JLabel instruct;
     private boolean leftDown = false;
     private boolean rightDown = false;
-    private static boolean isPaused = true;
+    private boolean isPaused = true;
  
     private LinkedList<JLabel> scoreCascade;
  
@@ -119,7 +119,7 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         layers.add(instruct, new Integer(80));
     }
     
-    public static void resume() {
+    public void resume() {
         isPaused = false;
         manager.setState(manager.RUNNING);
         manager.resume();

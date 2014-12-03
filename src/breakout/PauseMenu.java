@@ -11,10 +11,16 @@ public class PauseMenu extends JPanel implements MouseListener {
     private final JButton saveGame = new JButton("Save Game");
     private final JButton options = new JButton("Options");
     private final JButton quitGame = new JButton("Quit Game");
+    private final JLabel savedGame = new JLabel("");
+    private BreakoutPanel mainPanel;
+    private GameManager manager;
+    private GridBagConstraints constraints = new GridBagConstraints();
    
-    public PauseMenu() {
+    public PauseMenu(BreakoutPanel mainPanel, GameManager manager) {
+        this.mainPanel = mainPanel;
+        this.manager = manager;
+        
         this.setLayout(new GridBagLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
        
         this.setBackground(new Color(0, 0, 0, 60));
         paused.setFont(pausedFont);
@@ -57,14 +63,17 @@ public class PauseMenu extends JPanel implements MouseListener {
         JButton src = (JButton)e.getSource();
         switch (src.getText()) {
             case "Continue":
-                BreakoutPanel.resume();
+                mainPanel.resume();
                 Breakout.changeCard(Breakout.BREAKOUT);
+                savedGame.setText("");
                 break;
             case "Save Game":
-                // TODO add save game logic
+                manager.save();
+                JOptionPane.showMessageDialog(this, "Game Saved");
                 break;
             case "Options":
                 Breakout.changeCard(Breakout.OPTIONS);
+                savedGame.setText("");
                 break;
             case "Quit Game":
                 Container frame = src.getParent();

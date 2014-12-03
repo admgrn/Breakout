@@ -39,7 +39,7 @@ public class Breakout {
         
         MainMenu mainMenu = new MainMenu(manager);
         GameOver gameOver = new GameOver();
-        PauseMenu pauseMenu = new PauseMenu();
+        PauseMenu pauseMenu = new PauseMenu(breakoutPanel, manager);
 
         manager.startGame();
  
@@ -88,7 +88,7 @@ public class Breakout {
         pauseMenu.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    BreakoutPanel.resume();
+                    breakoutPanel.resume();
                     Breakout.changeCard(Breakout.BREAKOUT);
                 }
             }

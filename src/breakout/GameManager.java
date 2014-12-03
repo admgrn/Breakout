@@ -3,6 +3,7 @@ package breakout;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Vector;
@@ -10,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
  
-public class GameManager implements ActionListener {
+public class GameManager implements ActionListener, Serializable {
     public final static int STOPPED = 0;
     public final static int RUNNING = 1;
     public final static int WIN = 2;
@@ -22,16 +23,16 @@ public class GameManager implements ActionListener {
     private BreakoutPanel mainPanel;
     private ScorePanel scorePanel;
  
-    private Vector<Level> levels;
+    private Vector<Level> levels; // saved
  
-    private Level currentGame;
+    private Level currentGame; // saved
     private Ball ball;
     private Paddle paddle;
  
-    private int currentLevel = 0;
-    private int score = 0;
+    private int currentLevel = 0; // saved
+    private int score = 0; // saved
     private int startLives = 3;
-    private int lives = startLives;
+    private int lives = startLives; // saved
  
     private int state = STOPPED;
  
@@ -85,6 +86,11 @@ public class GameManager implements ActionListener {
     public void resume() {
         timer.start();
     }
+    
+    public void save() {
+        System.out.println("Saved");
+    }
+    
     public void nextLevel() {
         ++currentLevel;
         currentGame = levels.elementAt(currentLevel);
