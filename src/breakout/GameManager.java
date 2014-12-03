@@ -59,11 +59,15 @@ public class GameManager implements ActionListener, Serializable {
         if (state == BALLPAUSE) {
             state = RUNNING;
             ballChange.setTrans(currentGame.getStartTransform());
+            paddle.setDelta(0);
+            mainPanel.removeCascade();
         }
     }
     
     public void togglePaused() {
         if (state == RUNNING) {
+            paddle.setDelta(0);
+            mainPanel.removeCascade();
             timer.stop();
             state = PAUSED;
             // mainPanel.ballPause();
@@ -87,6 +91,8 @@ public class GameManager implements ActionListener, Serializable {
         
         ball.setPosition(currentGame.getStart());
         ballChange.setTrans(new Transform(0, 0));
+        paddle.setDelta(0);
+        mainPanel.removeCascade();
     }
  
     public void startGame() {
@@ -147,6 +153,9 @@ public class GameManager implements ActionListener, Serializable {
                 
                 ball.setPosition(currentGame.getStart());
                 ballChange.setTrans(new Transform(0, 0));
+                paddle.setDelta(0);
+                mainPanel.removeCascade();
+                startGame();
             }
             else {
                 JOptionPane.showMessageDialog(mainPanel, "Error opening save file.");
@@ -164,7 +173,7 @@ public class GameManager implements ActionListener, Serializable {
     
     public void nextLevel() {
         ++currentLevel;
-        if (levels.size() >= currentLevel) {
+        if (levels.size() > currentLevel) {
             canSave = true;
             savedScore = score;
             savedLives = lives;
@@ -173,10 +182,19 @@ public class GameManager implements ActionListener, Serializable {
             mainPanel.setPaused(true);
             ball.setPosition(currentGame.getStart());
             ballChange.setTrans(new Transform(0, 0));
+            paddle.setDelta(0);
+            mainPanel.removeCascade();
             startGame();
         }
         else {
-            JOptionPane.showMessageDialog(mainPanel, "You win!");
+            timer.stop();
+            JOptionPane.showMessageDialog(mainPanel, "You win!\n" +
+                                                     "Score: " + score);
+            mainPanel.clearControls();
+            paddle.setDelta(0);
+            mainPanel.removeCascade();
+            Breakout.changeCard("Main Menu");
+
         }
     }
  
@@ -184,6 +202,8 @@ public class GameManager implements ActionListener, Serializable {
         --lives;
         ball.setPosition(currentGame.getStart());
         ballChange.setTrans(new Transform(0, 0));
+        paddle.setDelta(0);
+        mainPanel.removeCascade();
         scorePanel.updateLives(lives);
         
         if (lives <= 0) {

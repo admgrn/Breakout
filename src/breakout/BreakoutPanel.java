@@ -90,6 +90,8 @@ public class BreakoutPanel extends JPanel implements KeyListener {
                 layers.remove(instruct);
                 break;
             case KeyEvent.VK_ESCAPE:
+                leftDown = false;
+                rightDown = false;
                 if (!isPaused) {
                     isPaused = true;
                     manager.togglePaused();
@@ -116,6 +118,11 @@ public class BreakoutPanel extends JPanel implements KeyListener {
             default:
                 break;
         }
+    }
+
+    public void clearControls() {
+        leftDown = false;
+        rightDown = false;
     }
  
     public void ballPause() {
@@ -175,7 +182,14 @@ public class BreakoutPanel extends JPanel implements KeyListener {
                 layers.remove(lab);
                 it.remove();
             }
- 
+        }
+    }
+
+    public void removeCascade() {
+        for (Iterator<JLabel> it = scoreCascade.iterator(); it.hasNext(); ) {
+            JLabel lab = it.next();
+            layers.remove(lab);
+            it.remove();
         }
     }
  

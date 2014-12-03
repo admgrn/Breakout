@@ -13,7 +13,7 @@ public class GameOver extends JPanel implements MouseListener {
         this.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         
-        this.setBackground(new Color(0, 0, 0, 60));
+        this.setBackground(Color.LIGHT_GRAY);
         
         constraints.fill = GridBagConstraints.CENTER;
         constraints.gridy = 1;

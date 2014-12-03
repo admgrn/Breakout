@@ -22,7 +22,7 @@ public class PauseMenu extends JPanel implements MouseListener {
         
         this.setLayout(new GridBagLayout());
        
-        this.setBackground(new Color(0, 0, 0, 60));
+        this.setBackground(Color.LIGHT_GRAY);
         paused.setFont(pausedFont);
        
         constraints.fill = GridBagConstraints.CENTER;

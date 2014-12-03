@@ -1,8 +1,17 @@
 package breakout;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Container;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.Box;
+import javax.swing.JFrame;
 
 public class MainMenu extends JPanel implements MouseListener {
     private final Font titleFont = new Font(Font.DIALOG, Font.BOLD, 70);
