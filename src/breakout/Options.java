@@ -10,9 +10,9 @@ public class Options extends JPanel implements MouseListener {
     private GameManager game;
     private JFrame frame;
 
-    private JLabel title = new JLabel("Options menu");
-    private JLabel resTitle = new JLabel("Resolution");
-    private JLabel startLivesTitle = new JLabel("Staring Lives");
+    private JLabel title = new JLabel("Options");
+    private JLabel resTitle = new JLabel("Resolution: ");
+    private JLabel startLivesTitle = new JLabel("Starting Lives: ");
     private JComboBox<Object> resolution = new JComboBox<>();
     private JComboBox<Object> startingLives = new JComboBox<>();
     private JButton done = new JButton("Done");

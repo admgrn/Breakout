@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Box;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class MainMenu extends JPanel implements MouseListener {
     private final Font titleFont = new Font(Font.DIALOG, Font.BOLD, 70);
@@ -77,12 +78,15 @@ public class MainMenu extends JPanel implements MouseListener {
                 Breakout.changeCard(Breakout.BREAKOUT);
                 break;
             case "Load Game":
-                game.load();
-                
-                Breakout.changeCard(Breakout.BREAKOUT);
-                
-                panel.revalidate();
-                panel.repaint();
+                try {
+                    game.load();
+                    Breakout.changeCard(Breakout.BREAKOUT);
+                    panel.revalidate();
+                    panel.repaint();
+                }
+                catch (Exception ex) {
+                    JOptionPane.showMessageDialog(panel, "Error opening save file.");
+                }
                 
                 break;
             case "Options":

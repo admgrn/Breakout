@@ -11,6 +11,7 @@ public class Breakout {
     private static CardLayout card;
     private static JPanel cards;
     private static JPanel mainPanel;
+    private static JFrame frame;
     public static final String MAIN_MENU = "Main Menu";
     public static final String BREAKOUT = "Breakout";
     public static final String GAME_OVER = "Game Over";
@@ -19,7 +20,7 @@ public class Breakout {
     public static final String LEVEL_EDITOR = "Level Editor";
     
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Breakout");
+        frame = new JFrame("Breakout");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(740, 480);
         frame.setFocusable(false);

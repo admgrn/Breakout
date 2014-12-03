@@ -1,5 +1,6 @@
 package breakout;
  
+import java.awt.Dimension;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,17 +25,17 @@ public class GameManager implements ActionListener, Serializable {
     private transient BreakoutPanel mainPanel;
     private transient ScorePanel scorePanel;
  
-    private Vector<Level> levels; // saved
+    private Vector<Level> levels;
  
-    private transient Level currentGame; // saved
+    private transient Level currentGame;
     private transient Ball ball;
     private transient Paddle paddle;
  
-    private int currentLevel = 0; // saved
-    private transient int score = 0; // saved
-
+    private int currentLevel = 0;
+    private transient int score = 0;
     private transient int startLives = 3;
-    private transient int lives = startLives; // saved
+    private transient int lives = startLives;
+    private transient int nextLife = 1000;
     private int savedScore = 0;
     private int savedLives = 0;
     
@@ -81,6 +82,7 @@ public class GameManager implements ActionListener, Serializable {
         // LevelPackage.resetLevels();
         this.levels = LevelPackage.getCurrentLevels(false);
         
+        nextLife = 1000;
         lives = startLives;
         score = 0;
         scorePanel.updateScore(score);
@@ -107,6 +109,9 @@ public class GameManager implements ActionListener, Serializable {
     
     public void save() {
         try {
+            savedLives = lives;
+            savedScore = score;
+            
             OutputStream file = new FileOutputStream("breakout.sav");
             OutputStream buffer = new BufferedOutputStream(file);
             ObjectOutput output = new ObjectOutputStream(buffer);
@@ -121,53 +126,36 @@ public class GameManager implements ActionListener, Serializable {
         }
     }
     
-    public void load() {
+    public void load() throws FileNotFoundException, IOException, ClassNotFoundException {
         GameManager load = null;
-        try {
-            InputStream file = new FileInputStream("breakout.sav");
-            InputStream buffer = new BufferedInputStream(file);
-            ObjectInput input = new ObjectInputStream(buffer);
+        InputStream file = new FileInputStream("breakout.sav");
+        InputStream buffer = new BufferedInputStream(file);
+        ObjectInput input = new ObjectInputStream(buffer);
             
-            load = (GameManager)input.readObject();
-            input.close();
+        load = (GameManager)input.readObject();
+        input.close();
             
-            if (load != null) {
-                this.state = STOPPED;
-                this.lives = load.savedLives;
-                this.score = load.savedScore;
+        if (load != null) {
+            this.state = STOPPED;
+            this.lives = load.savedLives;
+            this.score = load.savedScore;
                 
-                this.currentLevel = load.currentLevel;
-                // LevelPackage.resetLevels();
+            this.currentLevel = load.currentLevel;
+            LevelPackage.setLevels(load.levels);
+            this.levels = LevelPackage.getCurrentLevels(true);
+            currentGame = new Level(levels.elementAt(currentLevel));
+            mainPanel.setLevel(currentGame);
                 
-                LevelPackage.setLevels(load.levels);
-                // Currently this ends up setting the level in the state in
-                // which it was saved, instead of its default state (without
-                // any blocks broken). Score and lives are saving correctly.
-                // ^No longer true because users can only save in between levels
+            scorePanel.updateScore(score);
+            scorePanel.updateLives(lives);
                 
-                this.levels = LevelPackage.getCurrentLevels(true);
-                currentGame = new Level(levels.elementAt(currentLevel));
-                mainPanel.setLevel(currentGame);
-                
-                scorePanel.updateScore(score);
-                scorePanel.updateLives(lives);
-                
-                ball.setPosition(currentGame.getStart());
-                ballChange.setTrans(new Transform(0, 0));
-                paddle.setDelta(0);
-                mainPanel.removeCascade();
-                startGame();
-            }
-            else {
-                JOptionPane.showMessageDialog(mainPanel, "Error opening save file.");
-            }
+            ball.setPosition(currentGame.getStart());
+            ballChange.setTrans(new Transform(0, 0));
+            paddle.setDelta(0);
+            mainPanel.removeCascade();
+            startGame();
         }
-        catch(IOException ex) {
-            System.out.println(ex.toString());
-            JOptionPane.showMessageDialog(mainPanel, "Error opening save file.");
-        }
-        catch(ClassNotFoundException ex) {
-            System.out.println(ex.toString());
+        else {
             JOptionPane.showMessageDialog(mainPanel, "Error opening save file.");
         }
     }
@@ -176,8 +164,6 @@ public class GameManager implements ActionListener, Serializable {
         ++currentLevel;
         if (levels.size() > currentLevel) {
             canSave = true;
-            savedScore = score;
-            savedLives = lives;
             currentGame = new Level(levels.elementAt(currentLevel));
             mainPanel.setLevel(currentGame);
             mainPanel.setPaused(true);
@@ -314,7 +300,8 @@ public class GameManager implements ActionListener, Serializable {
             }
         }
         
-        if (score % 1000 == 0 && score != 0) {
+        if (score >= nextLife) {
+            nextLife *= 2;
             ++lives;
             scorePanel.updateLives(lives);
         }
