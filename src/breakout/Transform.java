@@ -1,6 +1,8 @@
 package breakout;
 
-public class Transform {
+import java.io.Serializable;
+
+public class Transform implements Serializable {
     public int x;
     public int y;
 

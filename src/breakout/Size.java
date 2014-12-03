@@ -1,6 +1,8 @@
 package breakout;
 
-public class Size {
+import java.io.Serializable;
+
+public class Size implements Serializable {
     int width, height;
 
     public Size(int width, int height) {

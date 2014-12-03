@@ -66,10 +66,11 @@ public class MainMenu extends JPanel implements MouseListener {
                 Breakout.changeCard(Breakout.BREAKOUT);
                 break;
             case "Load Game":
-                // TODO implement save/load game
+                game.load();
+                //Breakout.changeCard(Breakout.BREAKOUT);
                 break;
             case "Options":
-                // TODO implement options menu
+                Breakout.changeCard(Breakout.OPTIONS);
                 break;
             case "Level Editor":
                 Breakout.changeCard(Breakout.LEVEL_EDITOR);

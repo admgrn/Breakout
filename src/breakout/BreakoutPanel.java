@@ -85,6 +85,7 @@ public class BreakoutPanel extends JPanel implements KeyListener {
                 break;
             case KeyEvent.VK_SPACE:
                 isPaused = false;
+                manager.setCanSave(false);
                 manager.togglePauseBall();
                 layers.remove(instruct);
                 break;
