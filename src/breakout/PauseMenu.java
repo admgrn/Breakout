@@ -12,7 +12,6 @@ public class PauseMenu extends JPanel implements MouseListener {
     private final JButton saveGame = new JButton("Save Game");
     private final JButton options = new JButton("Options");
     private final JButton quitGame = new JButton("Quit Game");
-    private final JLabel savedGame = new JLabel("");
     private BreakoutPanel mainPanel;
     private GameManager manager;
     private GridBagConstraints constraints = new GridBagConstraints();
@@ -72,7 +71,6 @@ public class PauseMenu extends JPanel implements MouseListener {
             case "Continue":
                 mainPanel.resume();
                 Breakout.changeCard(Breakout.BREAKOUT);
-                savedGame.setText("");
                 break;
             case "Main Menu":
                 Breakout.changeCard(Breakout.MAIN_MENU);
@@ -87,7 +85,6 @@ public class PauseMenu extends JPanel implements MouseListener {
                 break;
             case "Options":
                 Breakout.changeCard(Breakout.OPTIONS);
-                savedGame.setText("");
                 break;
             case "Quit Game":
                 Container frame = src.getParent();

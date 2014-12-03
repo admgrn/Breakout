@@ -13,37 +13,37 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
  
 public class GameManager implements ActionListener, Serializable {
-    public final static int STOPPED = 0;
-    public final static int RUNNING = 1;
-    public final static int WIN = 2;
-    public final static int LOSS = 3;
-    public final static int PAUSED = 4;
-    public final static int GOINGTONEXTLEVEL = 5;
-    public final static int BALLPAUSE = 6;
+    public final static transient int STOPPED = 0;
+    public final static transient int RUNNING = 1;
+    public final static transient int WIN = 2;
+    public final static transient int LOSS = 3;
+    public final static transient int PAUSED = 4;
+    public final static transient int GOINGTONEXTLEVEL = 5;
+    public final static transient int BALLPAUSE = 6;
  
-    private static BreakoutPanel mainPanel;
-    private static ScorePanel scorePanel;
+    private transient BreakoutPanel mainPanel;
+    private transient ScorePanel scorePanel;
  
     private Vector<Level> levels; // saved
  
-    private Level currentGame; // saved
-    private static Ball ball;
-    private static Paddle paddle;
+    private transient Level currentGame; // saved
+    private transient Ball ball;
+    private transient Paddle paddle;
  
     private int currentLevel = 0; // saved
-    private int score = 0; // saved
-    private int startLives = 3;
-    private int lives = startLives; // saved
+    private transient int score = 0; // saved
+    private transient int startLives = 3;
+    private transient int lives = startLives; // saved
     private int savedScore = 0;
     private int savedLives = 0;
     
-    private boolean canSave = false;
+    private transient boolean canSave = false;
  
-    private int state = STOPPED;
+    private transient int state = STOPPED;
  
-    private static Timer timer;
+    private transient Timer timer;
  
-    private static Transform ballChange = new Transform();
+    private transient Transform ballChange = new Transform();
  
     public GameManager(Ball ball, Paddle paddle, BreakoutPanel mainPanel, ScorePanel scorePanel) {
         this.ball = ball;
@@ -110,7 +110,7 @@ public class GameManager implements ActionListener, Serializable {
         }
         catch(IOException ex) {
             System.out.println(ex.toString());
-            // error handling
+            JOptionPane.showMessageDialog(mainPanel, "Error saving game.");
         }
     }
     
@@ -125,6 +125,7 @@ public class GameManager implements ActionListener, Serializable {
             input.close();
             
             if (load != null) {
+                this.state = STOPPED;
                 this.lives = load.savedLives;
                 this.score = load.savedScore;
                 
@@ -146,11 +147,6 @@ public class GameManager implements ActionListener, Serializable {
                 
                 ball.setPosition(currentGame.getStart());
                 ballChange.setTrans(new Transform(0, 0));
-                
-                Breakout.changeCard(Breakout.BREAKOUT);
-                
-                mainPanel.revalidate();
-                mainPanel.repaint();
             }
             else {
                 JOptionPane.showMessageDialog(mainPanel, "Error opening save file.");

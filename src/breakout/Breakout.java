@@ -37,7 +37,7 @@ public class Breakout {
 
         GameManager manager = new GameManager(ball, paddle, breakoutPanel, scorePanel);
         
-        MainMenu mainMenu = new MainMenu(manager);
+        MainMenu mainMenu = new MainMenu(breakoutPanel, manager);
         GameOver gameOver = new GameOver();
         final PauseMenu pauseMenu = new PauseMenu(breakoutPanel, manager);
 

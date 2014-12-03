@@ -12,12 +12,14 @@ public class MainMenu extends JPanel implements MouseListener {
     private final JButton options = new JButton("Options");
     private final JButton quitGame = new JButton("Quit Game");
     private final JButton levelEditor = new JButton("Level Editor");
+    private final BreakoutPanel panel;
     private final GameManager game;
     
-    public MainMenu(GameManager game) {
+    public MainMenu(BreakoutPanel panel, GameManager game) {
         this.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
 
+        this.panel = panel;
         this.game = game;
         
         this.setBackground(Color.LIGHT_GRAY);
@@ -67,7 +69,12 @@ public class MainMenu extends JPanel implements MouseListener {
                 break;
             case "Load Game":
                 game.load();
-                //Breakout.changeCard(Breakout.BREAKOUT);
+                
+                Breakout.changeCard(Breakout.BREAKOUT);
+                
+                panel.revalidate();
+                panel.repaint();
+                
                 break;
             case "Options":
                 Breakout.changeCard(Breakout.OPTIONS);
