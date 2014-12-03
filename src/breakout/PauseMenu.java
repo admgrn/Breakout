@@ -71,6 +71,7 @@ public class PauseMenu extends JPanel implements MouseListener {
             case "Continue":
                 mainPanel.resume();
                 Breakout.changeCard(Breakout.BREAKOUT);
+                manager.updateBallPos();
                 break;
             case "Main Menu":
                 Breakout.changeCard(Breakout.MAIN_MENU);

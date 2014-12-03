@@ -325,6 +325,10 @@ public class GameManager implements ActionListener, Serializable {
             state = WIN;
         }
     }
+
+    public void updateBallPos() {
+        ball.setPosition(ball.getPosition());
+    }
  
     public Ball getBall() {
         return ball;

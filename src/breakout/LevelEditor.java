@@ -11,7 +11,7 @@ import java.util.Vector;
 public class LevelEditor extends JPanel implements MouseMotionListener, MouseListener {
     private CardLayout card = new CardLayout();
 
-    private Ball ball = new Ball();
+    private Ball ball;
     private GridLayout gridLayout = new GridLayout(3, 5, 5, 5);
     private JPanel grid = new JPanel(gridLayout);
     private Paddle paddle = new Paddle();
@@ -33,9 +33,14 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
     private boolean newLevel = false;
     private int levelIndex = 0;
 
-    public LevelEditor() {
+    private JFrame frame;
+
+    public LevelEditor(JFrame frame) {
         super();
         setLayout(new CardLayout());
+
+        this.frame = frame;
+        ball = new Ball(frame);
 
         blockEdit.setVisible(false);
 

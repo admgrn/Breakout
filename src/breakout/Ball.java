@@ -1,7 +1,7 @@
 package breakout;
 
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,8 +10,11 @@ public class Ball extends JPanel implements PositionInterval {
     private int diameter;
     private Position position;
     private BufferedImage image;
+    private static int oldHeight = 480;
 
-    public Ball() {
+    private JFrame frame;
+
+    public Ball(JFrame frame) {
         super();
         this.position = new Position(0, 0);
 
@@ -22,6 +25,7 @@ public class Ball extends JPanel implements PositionInterval {
         }
 
         this.diameter = image.getHeight();
+        this.frame = frame;
 
         setOpaque(false);
     }
@@ -45,6 +49,10 @@ public class Ball extends JPanel implements PositionInterval {
     }
 
     public void setPosition(Position position) {
+        if (frame.getHeight() != 0) {
+            position.changeXY(0, (frame.getHeight() - oldHeight) / 2);
+            oldHeight = frame.getHeight();
+        }
         this.position.setPosition(position);
     }
 

@@ -31,8 +31,6 @@ public class Level implements Serializable {
         for (BlockAbstract b : level.blocks) {
             blocks.add(b.copy());
         }
-
-
     }
 
     public void addBlock(BlockAbstract block) {

@@ -29,7 +29,7 @@ public class Breakout {
         cards = new JPanel(new CardLayout());
         mainPanel = new JPanel(new BorderLayout());
  
-        Ball ball = new Ball();
+        Ball ball = new Ball(frame);
         Paddle paddle = new Paddle();
  
         final BreakoutPanel breakoutPanel = new BreakoutPanel(ball, paddle);
@@ -50,7 +50,7 @@ public class Breakout {
         mainPanel.add(breakoutPanel, BorderLayout.CENTER);
         mainPanel.add(scorePanel, BorderLayout.EAST);
 
-        final LevelEditor editor = new LevelEditor();
+        final LevelEditor editor = new LevelEditor(frame);
         
         cards.add(mainMenu, Breakout.MAIN_MENU);
         cards.add(mainPanel, Breakout.BREAKOUT);
