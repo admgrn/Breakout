@@ -55,6 +55,14 @@ public class GameManager implements ActionListener {
             ballChange.setTrans(currentGame.getStartTransform());
         }
     }
+    
+    public void togglePaused() {
+        if (state == RUNNING) {
+            timer.stop();
+            state = PAUSED;
+            // mainPanel.ballPause();
+        }
+    }
  
     public void newGame() {
         this.levels = LevelPackage.getCurrentLevels(true);
@@ -74,18 +82,14 @@ public class GameManager implements ActionListener {
         state = BALLPAUSE;
     }
    
-    public void gameOver() {
-        // TODO
+    public void resume() {
+        timer.start();
     }
- 
-    public void clearGame() {
-        // TODO
-    }
- 
     public void nextLevel() {
         ++currentLevel;
         currentGame = levels.elementAt(currentLevel);
         mainPanel.setLevel(currentGame);
+        mainPanel.setPaused(true);
         ball.setPosition(currentGame.getStart());
         ballChange.setTrans(new Transform(0, 0));
         startGame();
@@ -100,7 +104,6 @@ public class GameManager implements ActionListener {
         if (lives <= 0) {
             state = LOSS;
             mainPanel.gameOver();
-            gameOver();
         }
         else {
             state = BALLPAUSE;

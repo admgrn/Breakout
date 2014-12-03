@@ -63,7 +63,7 @@ public class MainMenu extends JPanel implements MouseListener {
             case "New Game":
                 game.newGame();
                 game.startGame();
-                Breakout.changeCard("Breakout");
+                Breakout.changeCard(Breakout.BREAKOUT);
                 break;
             case "Load Game":
                 // TODO implement save/load game
@@ -72,7 +72,7 @@ public class MainMenu extends JPanel implements MouseListener {
                 // TODO implement options menu
                 break;
             case "Level Editor":
-                Breakout.changeCard("Level Editor");
+                Breakout.changeCard(Breakout.LEVEL_EDITOR);
                 break;
             case "Quit Game":
                 Container frame = clicked.getParent();
@@ -81,7 +81,6 @@ public class MainMenu extends JPanel implements MouseListener {
                 }
                 while (!(frame instanceof JFrame));
                 ((JFrame)frame).dispose();
-                // Ensure this actually exits
                 System.exit(0);
                 break;
             default:

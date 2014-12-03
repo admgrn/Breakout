@@ -11,13 +11,13 @@ import java.util.LinkedList;
  
 public class BreakoutPanel extends JPanel implements KeyListener {
     private Ball ball;
-    private GameManager manager = null;
+    private static GameManager manager = null;
     private Paddle paddle;
     private JPanel blocks;
     private JLabel instruct;
     private boolean leftDown = false;
     private boolean rightDown = false;
-    private boolean isPaused = true;
+    private static boolean isPaused = true;
  
     private LinkedList<JLabel> scoreCascade;
  
@@ -69,16 +69,19 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_LEFT:
-                if (!isPaused) {
+                // Set so that the user can still move even when it's paused,
+                // so that the user isn't stuck on the opposite side of the
+                // screen when they lose a life.
+                //if (!isPaused) {
                     paddle.changeDelta(-1);
                     leftDown = true;
-                }
+                //}
                 break;
             case KeyEvent.VK_RIGHT:
-                if (!isPaused) {
+                //if (!isPaused) {
                     paddle.changeDelta(1);
                     rightDown = true;
-                }
+                //}
                 break;
             case KeyEvent.VK_SPACE:
                 isPaused = false;
@@ -86,9 +89,11 @@ public class BreakoutPanel extends JPanel implements KeyListener {
                 layers.remove(instruct);
                 break;
             case KeyEvent.VK_ESCAPE:
-                System.out.println("Escape key");
-                manager.setState(manager.PAUSED);
-                Breakout.changeCard("Pause Menu");
+                if (!isPaused) {
+                    isPaused = true;
+                    manager.togglePaused();
+                    Breakout.changeCard(Breakout.PAUSE_MENU);
+                }
                 break;
             default:
                 break;
@@ -110,15 +115,18 @@ public class BreakoutPanel extends JPanel implements KeyListener {
     }
  
     public void ballPause() {
+        isPaused = true;
         layers.add(instruct, new Integer(80));
     }
     
-    public void pauseMenu() {
-        // TODO
+    public static void resume() {
+        isPaused = false;
+        manager.setState(manager.RUNNING);
+        manager.resume();
     }
  
     public void gameOver() {
-        Breakout.changeCard("Game Over");
+        Breakout.changeCard(Breakout.GAME_OVER);
     }
    
     public void madeScore(int value, Rectangle rect) {
