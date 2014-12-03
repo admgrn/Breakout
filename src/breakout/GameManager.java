@@ -32,6 +32,7 @@ public class GameManager implements ActionListener, Serializable {
  
     private int currentLevel = 0; // saved
     private transient int score = 0; // saved
+
     private transient int startLives = 3;
     private transient int lives = startLives; // saved
     private int savedScore = 0;
@@ -189,7 +190,7 @@ public class GameManager implements ActionListener, Serializable {
         else {
             timer.stop();
             JOptionPane.showMessageDialog(mainPanel, "You win!\n" +
-                                                     "Score: " + score);
+                    "Score: " + score);
             mainPanel.clearControls();
             paddle.setDelta(0);
             mainPanel.removeCascade();
@@ -395,5 +396,13 @@ public class GameManager implements ActionListener, Serializable {
     
     public void setCanSave(boolean b) {
         canSave = b;
+    }
+
+    public int getStartLives() {
+        return startLives;
+    }
+
+    public void setStartLives(int startLives) {
+        this.startLives = startLives;
     }
 }

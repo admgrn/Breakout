@@ -86,6 +86,7 @@ public class MainMenu extends JPanel implements MouseListener {
                 
                 break;
             case "Options":
+                Options.setReturnTo(Breakout.MAIN_MENU);
                 Breakout.changeCard(Breakout.OPTIONS);
                 break;
             case "Level Editor":

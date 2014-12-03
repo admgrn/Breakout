@@ -84,6 +84,7 @@ public class PauseMenu extends JPanel implements MouseListener {
                 }
                 break;
             case "Options":
+                Options.setReturnTo(Breakout.PAUSE_MENU);
                 Breakout.changeCard(Breakout.OPTIONS);
                 break;
             case "Quit Game":

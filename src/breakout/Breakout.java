@@ -40,6 +40,7 @@ public class Breakout {
         MainMenu mainMenu = new MainMenu(breakoutPanel, manager);
         GameOver gameOver = new GameOver();
         final PauseMenu pauseMenu = new PauseMenu(breakoutPanel, manager);
+        Options optionsMenu = new Options(manager, frame);
 
         manager.startGame();
  
@@ -56,6 +57,7 @@ public class Breakout {
         cards.add(gameOver, Breakout.GAME_OVER);
         cards.add(pauseMenu, Breakout.PAUSE_MENU);
         cards.add(editor, Breakout.LEVEL_EDITOR);
+        cards.add(optionsMenu, Breakout.OPTIONS);
 
         //frame.add(breakoutPanel, BorderLayout.CENTER);
         //frame.add(scorePanel, BorderLayout.EAST);
@@ -94,7 +96,7 @@ public class Breakout {
             }
         });
     }
-    
+
     public static void changeCard(String name) {
         card.show(cards, name);
     }
