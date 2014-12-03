@@ -93,7 +93,10 @@ public class BreakoutPanel extends JPanel implements KeyListener {
                     isPaused = true;
                     manager.togglePaused();
                     Breakout.changeCard(Breakout.PAUSE_MENU);
-                }
+                } else if (manager.getState() == GameManager.BALLPAUSE) {
+                    isPaused = true;
+                    Breakout.changeCard(Breakout.PAUSE_MENU);
+                } 
                 break;
             default:
                 break;
@@ -121,8 +124,10 @@ public class BreakoutPanel extends JPanel implements KeyListener {
     
     public void resume() {
         isPaused = false;
-        manager.setState(manager.RUNNING);
-        manager.resume();
+        if (manager.getState() != GameManager.BALLPAUSE) {
+            manager.setState(manager.RUNNING);
+            manager.resume();
+        }
     }
  
     public void gameOver() {

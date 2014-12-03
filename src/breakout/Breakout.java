@@ -39,7 +39,7 @@ public class Breakout {
         
         MainMenu mainMenu = new MainMenu(manager);
         GameOver gameOver = new GameOver();
-        PauseMenu pauseMenu = new PauseMenu(breakoutPanel, manager);
+        final PauseMenu pauseMenu = new PauseMenu(breakoutPanel, manager);
 
         manager.startGame();
  

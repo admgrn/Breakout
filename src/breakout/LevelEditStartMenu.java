@@ -90,7 +90,11 @@ public class LevelEditStartMenu extends JPanel implements MouseListener, ActionL
         }
     }
 
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent e) {}
+
+    public void mousePressed(MouseEvent e) {}
+
+    public void mouseReleased(MouseEvent e) {
         JButton clicked = (JButton)e.getSource();
         switch (clicked.getText()) {
             case "Back":
@@ -104,10 +108,6 @@ public class LevelEditStartMenu extends JPanel implements MouseListener, ActionL
                 break;
         }
     }
-
-    public void mousePressed(MouseEvent e) {}
-
-    public void mouseReleased(MouseEvent e) {}
 
     public void mouseEntered(MouseEvent e) {}
 
