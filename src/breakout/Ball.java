@@ -16,9 +16,9 @@ public class Ball extends JPanel implements PositionInterval {
         this.position = new Position(0, 0);
 
         try {
-            image = ImageIO.read(Ball.class.getResource("../images/ball.png"));
+            image = ImageIO.read(Ball.class.getResource("/images/ball.png"));
         } catch (Exception e) {
-            // TODO Error handling
+            System.out.println("Error reading ball image");
         }
 
         this.diameter = image.getHeight();
