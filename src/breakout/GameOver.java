@@ -41,7 +41,7 @@ public class GameOver extends JPanel implements MouseListener {
         JButton clicked = (JButton)me.getSource();
         switch (clicked.getText()) {
             case "Play Again":
-                Breakout.changeCard("Main Menu");
+                Breakout.changeCard(Breakout.MAIN_MENU);
                 break;
             case "Quit Game":
                 Container frame = clicked.getParent();
@@ -50,11 +50,9 @@ public class GameOver extends JPanel implements MouseListener {
                 }
                 while (!(frame instanceof JFrame));
                 ((JFrame)frame).dispose();
-                // Ensure this actually exits
                 System.exit(0);
                 break;
             default:
-                // error handling?
                 break;
         }
     }

@@ -11,6 +11,12 @@ public class Breakout {
     private static CardLayout card;
     private static JPanel cards;
     private static JPanel mainPanel;
+    public static final String MAIN_MENU = "Main Menu";
+    public static final String BREAKOUT = "Breakout";
+    public static final String GAME_OVER = "Game Over";
+    public static final String OPTIONS = "Options";
+    public static final String PAUSE_MENU = "Pause Menu";
+    public static final String LEVEL_EDITOR = "Level Editor";
     
     public static void main(String[] args) {
         JFrame frame = new JFrame("Breakout");
@@ -45,11 +51,11 @@ public class Breakout {
 
         final LevelEditor editor = new LevelEditor();
         
-        cards.add(mainMenu, "Main Menu");
-        cards.add(mainPanel, "Breakout");
-        cards.add(gameOver, "Game Over");
-        cards.add(pauseMenu, "Pause Menu");
-        cards.add(editor, "Level Editor");
+        cards.add(mainMenu, Breakout.MAIN_MENU);
+        cards.add(mainPanel, Breakout.BREAKOUT);
+        cards.add(gameOver, Breakout.GAME_OVER);
+        cards.add(pauseMenu, Breakout.PAUSE_MENU);
+        cards.add(editor, Breakout.LEVEL_EDITOR);
 
         //frame.add(breakoutPanel, BorderLayout.CENTER);
         //frame.add(scorePanel, BorderLayout.EAST);
@@ -70,6 +76,21 @@ public class Breakout {
         editor.addComponentListener(new ComponentAdapter() {
             public void componentShown(ComponentEvent e) {
                 editor.requestFocusInWindow();
+            }
+        });
+        
+        pauseMenu.addComponentListener(new ComponentAdapter() {
+            public void componentShown(ComponentEvent e) {
+                pauseMenu.requestFocusInWindow();
+            }
+        });
+        
+        pauseMenu.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    BreakoutPanel.resume();
+                    Breakout.changeCard(Breakout.BREAKOUT);
+                }
             }
         });
     }
