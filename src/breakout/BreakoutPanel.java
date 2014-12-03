@@ -11,13 +11,13 @@ import java.util.LinkedList;
  
 public class BreakoutPanel extends JPanel implements KeyListener {
     private Ball ball;
-    private static GameManager manager = null;
+    private GameManager manager = null;
     private Paddle paddle;
     private JPanel blocks;
     private JLabel instruct;
     private boolean leftDown = false;
     private boolean rightDown = false;
-    private static boolean isPaused = true;
+    private boolean isPaused = true;
  
     private LinkedList<JLabel> scoreCascade;
  
@@ -85,6 +85,7 @@ public class BreakoutPanel extends JPanel implements KeyListener {
                 break;
             case KeyEvent.VK_SPACE:
                 isPaused = false;
+                manager.setCanSave(false);
                 manager.togglePauseBall();
                 layers.remove(instruct);
                 break;
@@ -96,7 +97,7 @@ public class BreakoutPanel extends JPanel implements KeyListener {
                 } else if (manager.getState() == GameManager.BALLPAUSE) {
                     isPaused = true;
                     Breakout.changeCard(Breakout.PAUSE_MENU);
-                }
+                } 
                 break;
             default:
                 break;
@@ -122,7 +123,7 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         layers.add(instruct, new Integer(80));
     }
     
-    public static void resume() {
+    public void resume() {
         isPaused = false;
         if (manager.getState() != GameManager.BALLPAUSE) {
             manager.setState(manager.RUNNING);

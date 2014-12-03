@@ -3,7 +3,7 @@ package breakout;
 import java.io.Serializable;
 import java.util.LinkedList;
 
-public class Level {
+public class Level implements Serializable {
 
     private Size size;
     private LinkedList<BlockAbstract> blocks;

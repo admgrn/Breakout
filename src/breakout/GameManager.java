@@ -3,6 +3,8 @@ package breakout;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Vector;
@@ -10,7 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
  
-public class GameManager implements ActionListener {
+public class GameManager implements ActionListener, Serializable {
     public final static int STOPPED = 0;
     public final static int RUNNING = 1;
     public final static int WIN = 2;
@@ -19,25 +21,29 @@ public class GameManager implements ActionListener {
     public final static int GOINGTONEXTLEVEL = 5;
     public final static int BALLPAUSE = 6;
  
-    private BreakoutPanel mainPanel;
-    private ScorePanel scorePanel;
+    private static BreakoutPanel mainPanel;
+    private static ScorePanel scorePanel;
  
-    private Vector<Level> levels;
+    private Vector<Level> levels; // saved
  
-    private Level currentGame;
-    private Ball ball;
-    private Paddle paddle;
+    private Level currentGame; // saved
+    private static Ball ball;
+    private static Paddle paddle;
  
-    private int currentLevel = 0;
-    private int score = 0;
+    private int currentLevel = 0; // saved
+    private int score = 0; // saved
     private int startLives = 3;
-    private int lives = startLives;
+    private int lives = startLives; // saved
+    private int savedScore = 0;
+    private int savedLives = 0;
+    
+    private boolean canSave = false;
  
     private int state = STOPPED;
  
-    private Timer timer;
+    private static Timer timer;
  
-    private Transform ballChange = new Transform();
+    private static Transform ballChange = new Transform();
  
     public GameManager(Ball ball, Paddle paddle, BreakoutPanel mainPanel, ScorePanel scorePanel) {
         this.ball = ball;
@@ -65,14 +71,20 @@ public class GameManager implements ActionListener {
     }
  
     public void newGame() {
+        canSave = true;
+        
+        LevelPackage.resetLevels();
         this.levels = LevelPackage.getCurrentLevels(true);
+        
         lives = startLives;
         score = 0;
         scorePanel.updateScore(score);
         scorePanel.updateLives(lives);
+        
         currentLevel = 0;
         currentGame = levels.elementAt(0);
         mainPanel.setLevel(currentGame);
+        
         ball.setPosition(currentGame.getStart());
         ballChange.setTrans(new Transform(0, 0));
     }
@@ -85,14 +97,91 @@ public class GameManager implements ActionListener {
     public void resume() {
         timer.start();
     }
+    
+    public void save() {
+        try {
+            OutputStream file = new FileOutputStream("breakout.sav");
+            OutputStream buffer = new BufferedOutputStream(file);
+            ObjectOutput output = new ObjectOutputStream(buffer);
+            
+            output.writeObject(this);
+            output.close();
+            JOptionPane.showMessageDialog(mainPanel, "Game Saved");
+        }
+        catch(IOException ex) {
+            System.out.println(ex.toString());
+            // error handling
+        }
+    }
+    
+    public void load() {
+        GameManager load = null;
+        try {
+            InputStream file = new FileInputStream("breakout.sav");
+            InputStream buffer = new BufferedInputStream(file);
+            ObjectInput input = new ObjectInputStream(buffer);
+            
+            load = (GameManager)input.readObject();
+            input.close();
+            
+            if (load != null) {
+                this.lives = load.savedLives;
+                this.score = load.savedScore;
+                
+                this.currentLevel = load.currentLevel;
+                // LevelPackage.resetLevels();
+                
+                LevelPackage.setLevels(load.levels);
+                // Currently this ends up setting the level in the state in
+                // which it was saved, instead of its default state (without
+                // any blocks broken). Score and lives are saving correctly.
+                // ^No longer true because users can only save in between levels
+                
+                this.levels = LevelPackage.getCurrentLevels(true);
+                currentGame = levels.elementAt(currentLevel);
+                mainPanel.setLevel(currentGame);
+                
+                scorePanel.updateScore(score);
+                scorePanel.updateLives(lives);
+                
+                ball.setPosition(currentGame.getStart());
+                ballChange.setTrans(new Transform(0, 0));
+                
+                Breakout.changeCard(Breakout.BREAKOUT);
+                
+                mainPanel.revalidate();
+                mainPanel.repaint();
+            }
+            else {
+                JOptionPane.showMessageDialog(mainPanel, "Error opening save file.");
+            }
+        }
+        catch(IOException ex) {
+            System.out.println(ex.toString());
+            JOptionPane.showMessageDialog(mainPanel, "Error opening save file.");
+        }
+        catch(ClassNotFoundException ex) {
+            System.out.println(ex.toString());
+            JOptionPane.showMessageDialog(mainPanel, "Error opening save file.");
+        }
+    }
+    
     public void nextLevel() {
         ++currentLevel;
-        currentGame = levels.elementAt(currentLevel);
-        mainPanel.setLevel(currentGame);
-        mainPanel.setPaused(true);
-        ball.setPosition(currentGame.getStart());
-        ballChange.setTrans(new Transform(0, 0));
-        startGame();
+        if (levels.size() >= currentLevel) {
+            canSave = true;
+            savedScore = score;
+            savedLives = lives;
+            currentGame = levels.elementAt(currentLevel);
+            mainPanel.setLevel(currentGame);
+            mainPanel.setPaused(true);
+            ball.setPosition(currentGame.getStart());
+            ballChange.setTrans(new Transform(0, 0));
+            startGame();
+        }
+        else {
+            JOptionPane.showMessageDialog(mainPanel, "You win!");
+        }
     }
  
     public void lostLife() {
@@ -282,5 +371,13 @@ public class GameManager implements ActionListener {
    
     public void setState(int s) {
         state = s;
+    }
+    
+    public boolean getCanSave() {
+        return canSave;
+    }
+    
+    public void setCanSave(boolean b) {
+        canSave = b;
     }
 }
