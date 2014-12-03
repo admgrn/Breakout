@@ -1,5 +1,6 @@
 package breakout;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 public class Level {

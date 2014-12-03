@@ -35,6 +35,10 @@ public class LevelPackage {
         return newLevels;
     }
 
+    public static void setLevels(Vector<Level> levels) {
+        LevelPackage.levels = levels;
+    }
+
     public static Vector<Level> getStandardLevels(boolean copy) {
         Vector<Level> levels = new Vector<Level>();
 
