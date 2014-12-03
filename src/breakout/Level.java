@@ -20,6 +20,21 @@ public class Level implements Serializable {
         this.startTransform = startTransform;
     }
 
+    public Level(Level level) {
+        size = new Size(level.size);
+        start = new Position(level.start);
+        startTransform = new Transform(level.startTransform);
+        remaining = level.remaining;
+        maxCount = level.maxCount;
+        blocks = new LinkedList<BlockAbstract>();
+
+        for (BlockAbstract b : level.blocks) {
+            blocks.add(b.copy());
+        }
+
+
+    }
+
     public void addBlock(BlockAbstract block) {
         if (block.isDestroyable() && block.isVis()) {
             ++remaining;

@@ -73,8 +73,8 @@ public class GameManager implements ActionListener, Serializable {
     public void newGame() {
         canSave = true;
         
-        LevelPackage.resetLevels();
-        this.levels = LevelPackage.getCurrentLevels(true);
+        // LevelPackage.resetLevels();
+        this.levels = LevelPackage.getCurrentLevels(false);
         
         lives = startLives;
         score = 0;
@@ -82,7 +82,7 @@ public class GameManager implements ActionListener, Serializable {
         scorePanel.updateLives(lives);
         
         currentLevel = 0;
-        currentGame = levels.elementAt(0);
+        currentGame = new Level(levels.elementAt(0));
         mainPanel.setLevel(currentGame);
         
         ball.setPosition(currentGame.getStart());
@@ -138,7 +138,7 @@ public class GameManager implements ActionListener, Serializable {
                 // ^No longer true because users can only save in between levels
                 
                 this.levels = LevelPackage.getCurrentLevels(true);
-                currentGame = levels.elementAt(currentLevel);
+                currentGame = new Level(levels.elementAt(currentLevel));
                 mainPanel.setLevel(currentGame);
                 
                 scorePanel.updateScore(score);
@@ -172,7 +172,7 @@ public class GameManager implements ActionListener, Serializable {
             canSave = true;
             savedScore = score;
             savedLives = lives;
-            currentGame = levels.elementAt(currentLevel);
+            currentGame = new Level(levels.elementAt(currentLevel));
             mainPanel.setLevel(currentGame);
             mainPanel.setPaused(true);
             ball.setPosition(currentGame.getStart());
