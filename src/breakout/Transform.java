@@ -23,4 +23,3 @@ public class Transform {
         y = a.y;
     }
 }
-
