@@ -1,14 +1,15 @@
 package breakout;
 
 import javax.swing.JPanel;
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Rectangle;
 
 public class Paddle extends JPanel implements PositionInterval {
+
     private Size size;
     private int offset;
     private int delta = 0;
-    private int deltaInc = 10;
-    private float deltaMax = 20;
     private int padding = 10;
 
     public Paddle() {
@@ -47,6 +48,9 @@ public class Paddle extends JPanel implements PositionInterval {
     }
 
     public void changeDelta(int d) {
+        int deltaInc = 10;
+        float deltaMax = 20;
+
         if (Math.abs(delta) <= deltaMax)
             delta += d * deltaInc;
     }
@@ -77,14 +81,6 @@ public class Paddle extends JPanel implements PositionInterval {
     }
 
     public void setDelta(int delta) {
-        this.delta = 0;
-    }
-
-    public int getOffset() {
-        return offset;
-    }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
+        this.delta = delta;
     }
 }

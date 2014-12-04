@@ -1,15 +1,26 @@
 package breakout;
- 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
- 
-public class GameOver extends JPanel implements MouseListener {
-    private final JLabel gameOverMessage = new JLabel("Game Over. Try again?");
-    private final JButton tryAgain = new JButton("Play Again");
-    private final JButton quitGame = new JButton("Quit Game");
+
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.Box;
+import javax.swing.JFrame;
+
+public class GameOver extends JPanel implements ActionListener {
    
     public GameOver() {
+        super();
+
+        JLabel gameOverMessage = new JLabel("Game Over. Try again?");
+        JButton tryAgain = new JButton("Play Again");
+        JButton quitGame = new JButton("Quit Game");
+
         this.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         
@@ -33,12 +44,12 @@ public class GameOver extends JPanel implements MouseListener {
         constraints.weightx = 1;
         this.add(quitGame, constraints);
         
-        tryAgain.addMouseListener(this);
-        quitGame.addMouseListener(this);
+        tryAgain.addActionListener(this);
+        quitGame.addActionListener(this);
     }
- 
-    public void mouseClicked(MouseEvent me) {
-        JButton clicked = (JButton)me.getSource();
+
+    public void actionPerformed(ActionEvent e) {
+        JButton clicked = (JButton)e.getSource();
         switch (clicked.getText()) {
             case "Play Again":
                 Breakout.changeCard(Breakout.MAIN_MENU);
@@ -56,8 +67,4 @@ public class GameOver extends JPanel implements MouseListener {
                 break;
         }
     }
-    public void mousePressed(MouseEvent me) {}
-    public void mouseReleased(MouseEvent me) {}
-    public void mouseEntered(MouseEvent me) {}
-    public void mouseExited(MouseEvent me) {}
 }

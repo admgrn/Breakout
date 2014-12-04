@@ -1,15 +1,21 @@
 package breakout;
- 
-import org.w3c.dom.css.Rect;
- 
-import javax.swing.*;
-import java.awt.*;
+
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Iterator;
 import java.util.LinkedList;
  
 public class BreakoutPanel extends JPanel implements KeyListener {
+
     private Ball ball;
     private GameManager manager = null;
     private Paddle paddle;
@@ -26,13 +32,14 @@ public class BreakoutPanel extends JPanel implements KeyListener {
     public BreakoutPanel(Ball ball, Paddle paddle) {
         super();
         this.ball = ball;
+        this.ball = ball;
         this.paddle = paddle;
         this.blocks = new JPanel();
         this.instruct = new JLabel("Press Spacebar to begin");
         this.instruct.setOpaque(false);
         this.instruct.setHorizontalAlignment(SwingConstants.CENTER);
-        this.scoreCascade = new LinkedList<JLabel>();
- 
+        this.scoreCascade = new LinkedList<>();
+
         setLayout(new BorderLayout());
  
         layers = new JLayeredPane();
@@ -72,16 +79,12 @@ public class BreakoutPanel extends JPanel implements KeyListener {
                 // Set so that the user can still move even when it's paused,
                 // so that the user isn't stuck on the opposite side of the
                 // screen when they lose a life.
-                //if (!isPaused) {
-                    paddle.changeDelta(-1);
-                    leftDown = true;
-                //}
+                paddle.changeDelta(-1);
+                leftDown = true;
                 break;
             case KeyEvent.VK_RIGHT:
-                //if (!isPaused) {
-                    paddle.changeDelta(1);
-                    rightDown = true;
-                //}
+                paddle.changeDelta(1);
+                rightDown = true;
                 break;
             case KeyEvent.VK_SPACE:
                 isPaused = false;
@@ -133,12 +136,14 @@ public class BreakoutPanel extends JPanel implements KeyListener {
     public void resume() {
         isPaused = false;
         if (manager.getState() != GameManager.BALLPAUSE) {
-            manager.setState(manager.RUNNING);
+            manager.setState(GameManager.RUNNING);
             manager.resume();
         }
     }
  
     public void gameOver() {
+        removeCascade();
+        clearControls();
         Breakout.changeCard(Breakout.GAME_OVER);
     }
    
@@ -168,7 +173,6 @@ public class BreakoutPanel extends JPanel implements KeyListener {
             this.paddle.changeDelta(-1);
         }
         this.paddle.updatePosition();
- 
     }
  
     public void updateCascade() {
@@ -191,10 +195,6 @@ public class BreakoutPanel extends JPanel implements KeyListener {
             layers.remove(lab);
             it.remove();
         }
-    }
- 
-    public boolean isPaused() {
-        return isPaused;
     }
  
     public void setPaused(boolean isPaused) {

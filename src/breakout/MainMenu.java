@@ -1,31 +1,35 @@
 package breakout;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.Box;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Container;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.Box;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class MainMenu extends JPanel implements MouseListener {
-    private final Font titleFont = new Font(Font.DIALOG, Font.BOLD, 70);
-    private final JLabel breakout = new JLabel("Breakout");
-    private final JButton newGame = new JButton("New Game");
-    private final JButton loadGame = new JButton("Load Game");
-    private final JButton options = new JButton("Options");
-    private final JButton quitGame = new JButton("Quit Game");
-    private final JButton levelEditor = new JButton("Level Editor");
+public class MainMenu extends JPanel implements ActionListener {
+
     private final BreakoutPanel panel;
     private final GameManager game;
     
     public MainMenu(BreakoutPanel panel, GameManager game) {
+        super();
+
+        Font titleFont = new Font(Font.DIALOG, Font.BOLD, 70);
+        JLabel breakout = new JLabel("Breakout");
+        JButton newGame = new JButton("New Game");
+        JButton loadGame = new JButton("Load Game");
+        JButton options = new JButton("Options");
+        JButton quitGame = new JButton("Quit Game");
+        JButton levelEditor = new JButton("Level Editor");
+
         this.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
 
@@ -62,14 +66,14 @@ public class MainMenu extends JPanel implements MouseListener {
         constraints.gridy = 7;
         this.add(quitGame, constraints);
         
-        newGame.addMouseListener(this);
-        loadGame.addMouseListener(this);
-        options.addMouseListener(this);
-        levelEditor.addMouseListener(this);
-        quitGame.addMouseListener(this);
+        newGame.addActionListener(this);
+        loadGame.addActionListener(this);
+        options.addActionListener(this);
+        levelEditor.addActionListener(this);
+        quitGame.addActionListener(this);
     }
 
-    public void mouseClicked(MouseEvent e) {
+    public void actionPerformed(ActionEvent e) {
         JButton clicked = (JButton)e.getSource();
         switch(clicked.getText()) {
             case "New Game":
@@ -87,7 +91,6 @@ public class MainMenu extends JPanel implements MouseListener {
                 catch (Exception ex) {
                     JOptionPane.showMessageDialog(panel, "Error opening save file.");
                 }
-                
                 break;
             case "Options":
                 Options.setReturnTo(Breakout.MAIN_MENU);
@@ -109,8 +112,4 @@ public class MainMenu extends JPanel implements MouseListener {
                 break;
         }
     }
-    public void mousePressed(MouseEvent e) {}
-    public void mouseReleased(MouseEvent e) {}
-    public void mouseEntered(MouseEvent e) {}
-    public void mouseExited(MouseEvent e) {}
 }

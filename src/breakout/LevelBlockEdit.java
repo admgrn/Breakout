@@ -1,24 +1,31 @@
 package breakout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import javax.swing.Box;
+import java.awt.Color;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class LevelBlockEdit extends JPanel implements MouseListener, ItemListener {
+public class LevelBlockEdit extends JPanel implements ActionListener, ItemListener {
 
-    private JLabel pointLabel = new JLabel("Edit Point Weight");
-    private JLabel typeLabel = new JLabel("Edit Block Type");
-    private JComboBox<Object> pointSelect = new JComboBox<Object>();
-    private JComboBox<Object> typeSelect = new JComboBox<Object>();
-    private JButton done = new JButton("Done");
+    private JComboBox<Object> pointSelect = new JComboBox<>();
+    private JComboBox<Object> typeSelect = new JComboBox<>();
 
     private LevelEditor editor;
 
     public LevelBlockEdit(LevelEditor editor) {
         super();
+
+        JLabel pointLabel = new JLabel("Edit Point Weight");
+        JLabel typeLabel = new JLabel("Edit Block Type");
+        JButton done = new JButton("Done");
 
         this.editor = editor;
 
@@ -68,7 +75,7 @@ public class LevelBlockEdit extends JPanel implements MouseListener, ItemListene
         constraints.gridwidth = 2;
         add(done, constraints);
 
-        done.addMouseListener(this);
+        done.addActionListener(this);
         typeSelect.addItemListener(this);
     }
 
@@ -118,7 +125,7 @@ public class LevelBlockEdit extends JPanel implements MouseListener, ItemListene
         }
     }
 
-    public void mouseClicked(MouseEvent e) {
+    public void actionPerformed(ActionEvent e) {
         BlockAbstract block = null;
 
         switch (typeSelect.getSelectedIndex()) {
@@ -138,16 +145,8 @@ public class LevelBlockEdit extends JPanel implements MouseListener, ItemListene
         editor.updateEditedBlock(block);
     }
 
-    public void mousePressed(MouseEvent e) {}
-
-    public void mouseReleased(MouseEvent e) {}
-
-    public void mouseEntered(MouseEvent e) {}
-
-    public void mouseExited(MouseEvent e) {}
-
     public void itemStateChanged(ItemEvent e) {
-        JComboBox<Object> found = (JComboBox<Object>)e.getSource();
+        JComboBox found = (JComboBox)e.getSource();
 
         switch (found.getSelectedIndex()) {
             case 0:

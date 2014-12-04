@@ -1,17 +1,12 @@
 package breakout;
 
-import java.awt.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.ListIterator;
+import java.awt.Color;
+import java.awt.Graphics;
 
 public class BlockWeak extends BlockAbstract {
+
     public int weight;
     public boolean editible = false;
-
-    public BlockWeak() {
-        this(true, 10);
-    }
 
     public BlockWeak(boolean visible) {
         this(visible, 10);

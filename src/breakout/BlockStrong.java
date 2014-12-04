@@ -1,8 +1,10 @@
 package breakout;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 
 public class BlockStrong extends BlockAbstract {
+
     public BlockStrong() {
         vis = true;
         destroyable = false;

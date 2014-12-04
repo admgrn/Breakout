@@ -1,16 +1,24 @@
 package breakout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.JLayeredPane;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import java.awt.Color;
-import java.awt.event.*;
+import java.awt.Graphics;
+import java.awt.CardLayout;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Vector;
 
 public class LevelEditor extends JPanel implements MouseMotionListener, MouseListener {
-    private CardLayout card = new CardLayout();
 
+    private CardLayout card = new CardLayout();
     private Ball ball;
     private GridLayout gridLayout = new GridLayout(3, 5, 5, 5);
     private JPanel grid = new JPanel(gridLayout);
@@ -23,28 +31,26 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
     private double vectMagnitude = 40d;
 
     private JLayeredPane layers = new JLayeredPane();
-    private LevelEditStartMenu editStart = new LevelEditStartMenu(this);
+    private LevelEditStartMenu editStart;
     private LevelEditMenu editMenu = new LevelEditMenu(this);
     private LevelBlockEdit blockEdit = new LevelBlockEdit(this);
 
     private Level editBlocks = new Level(3, 5, new Position(0, 0), new Transform(0, 0));
     private ListIterator<BlockAbstract> currentBlock = null;
 
-    private boolean newLevel = false;
     private int levelIndex = 0;
 
-    private JFrame frame;
 
     public LevelEditor(JFrame frame) {
         super();
         setLayout(new CardLayout());
 
-        this.frame = frame;
         ball = new Ball(frame);
-
+        editStart = new LevelEditStartMenu(this, frame);
         blockEdit.setVisible(false);
 
         grid.setBackground(new Color(224, 224, 224));
+        ball.setOffset(0);
         ball.setPosition(new Position(200, 200));
 
         startVector = new Point(200 + ball.getDiameter() / 2, 200 + ball.getDiameter() / 2);
@@ -106,7 +112,6 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
     }
 
     public void setLevelToEdit(int index) {
-        newLevel = false;
         levelIndex = index;
 
         // Clear any old levels
@@ -132,6 +137,7 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
             grid.add(editBlocks.getBlocks().getLast());
         }
 
+        ball.setOffset(0);
         ball.setPosition(level.getStart());
         startVector.x = level.getStart().getX() + ball.getDiameter() / 2;
         startVector.y = level.getStart().getY() + ball.getDiameter() / 2;
@@ -143,6 +149,10 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
 
         revalidate();
         repaint();
+    }
+
+    public void updateSize() {
+        editStart.restoreSize();
     }
 
     public void updateRowsColumns(int rows, int columns) {
@@ -308,7 +318,10 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
 
         repaint();
     }
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent e) {}
+
+    public void mouseReleased(MouseEvent e) {
+        isDraggingBall = false;
         Point mousePosition = e.getPoint();
 
         for (ListIterator<BlockAbstract> it = editBlocks.getBlocks().listIterator(); it.hasNext();) {
@@ -321,10 +334,6 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
                 break;
             }
         }
-    }
-
-    public void mouseReleased(MouseEvent e) {
-        isDraggingBall = false;
     }
 
     public void mouseMoved(MouseEvent e) {}

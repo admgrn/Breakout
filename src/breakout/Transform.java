@@ -3,11 +3,12 @@ package breakout;
 import java.io.Serializable;
 
 public class Transform implements Serializable {
+
     public int x;
     public int y;
 
     public Transform() {
-        this(0,0);
+        this(0, 0);
     }
 
     public Transform(int x, int y){

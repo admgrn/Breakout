@@ -1,24 +1,37 @@
 package breakout;
- 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
- 
-public class PauseMenu extends JPanel implements MouseListener {
-    private final Font pausedFont = new Font(Font.SANS_SERIF, Font.ITALIC, 40);
-    private final JLabel paused = new JLabel("Paused");
-    private final JButton continueGame = new JButton("Continue");
-    private final JButton mainMenu = new JButton("Main Menu");
-    private final JButton saveGame = new JButton("Save Game");
-    private final JButton options = new JButton("Options");
-    private final JButton quitGame = new JButton("Quit Game");
+
+import javax.swing.JPanel;
+import javax.swing.JOptionPane;
+import javax.swing.Box;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class PauseMenu extends JPanel implements ActionListener {
+
     private BreakoutPanel mainPanel;
     private GameManager manager;
-    private GridBagConstraints constraints = new GridBagConstraints();
    
     public PauseMenu(BreakoutPanel mainPanel, GameManager manager) {
+        GridBagConstraints constraints = new GridBagConstraints();
+
         this.mainPanel = mainPanel;
         this.manager = manager;
+
+        Font pausedFont = new Font(Font.SANS_SERIF, Font.ITALIC, 40);
+        JLabel paused = new JLabel("Paused");
+        JButton continueGame = new JButton("Continue");
+        JButton mainMenu = new JButton("Main Menu");
+        JButton saveGame = new JButton("Save Game");
+        JButton options = new JButton("Options");
+        JButton quitGame = new JButton("Quit Game");
         
         this.setLayout(new GridBagLayout());
        
@@ -58,14 +71,14 @@ public class PauseMenu extends JPanel implements MouseListener {
         constraints.weightx = 1;
         this.add(quitGame, constraints);
        
-        continueGame.addMouseListener(this);
-        saveGame.addMouseListener(this);
-        options.addMouseListener(this);
-        quitGame.addMouseListener(this);
-        mainMenu.addMouseListener(this);
+        continueGame.addActionListener(this);
+        saveGame.addActionListener(this);
+        options.addActionListener(this);
+        quitGame.addActionListener(this);
+        mainMenu.addActionListener(this);
     }
- 
-    public void mouseClicked(MouseEvent e) {
+
+    public void actionPerformed(ActionEvent e) {
         JButton src = (JButton)e.getSource();
         switch (src.getText()) {
             case "Continue":
@@ -101,8 +114,4 @@ public class PauseMenu extends JPanel implements MouseListener {
                 break;
         }
     }
-    public void mousePressed(MouseEvent e) {}
-    public void mouseReleased(MouseEvent e) {}
-    public void mouseEntered(MouseEvent e) {}
-    public void mouseExited(MouseEvent e) {}
 }

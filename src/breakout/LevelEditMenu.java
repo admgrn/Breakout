@@ -1,38 +1,45 @@
 package breakout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class LevelEditMenu extends JPanel implements ItemListener, MouseListener {
-    private JLabel heading = new JLabel("Toolbox");
-    private JLabel rowCountLabel = new JLabel("Row Count");
-    private JLabel columnCountLabel = new JLabel("Column Count");
-    private JComboBox rowCount = new JComboBox();
-    private JComboBox columnCount = new JComboBox();
-    private JButton saveButton = new JButton("Save");
-    private JButton discardButton = new JButton("Discard");
-    private JButton delete = new JButton("Delete Level");
-    private JButton help = new JButton("Help");
+public class LevelEditMenu extends JPanel implements ItemListener, ActionListener {
+
+    private JComboBox<Integer> rowCount = new JComboBox<>();
+    private JComboBox<Integer> columnCount = new JComboBox<>();
 
     private boolean noUpdate = false;
-
     private LevelEditor editor;
 
     public LevelEditMenu(LevelEditor editor) {
         super();
         this.editor = editor;
 
+        JLabel heading = new JLabel("Toolbox");
+        JLabel rowCountLabel = new JLabel("Row Count");
+        JLabel columnCountLabel = new JLabel("Column Count");
+        JButton saveButton = new JButton("Save");
+        JButton discardButton = new JButton("Discard");
+        JButton delete = new JButton("Delete Level");
+        JButton help = new JButton("Help");
+
         setBackground(new Color(255, 232, 132));
         setLayout(new GridBagLayout());
 
-        for (int i = 1; i < 8; ++i)
+        for (int i = 1; i < 11; ++i)
             columnCount.addItem(i);
 
-        for (int i = 1; i < 6; ++i)
+        for (int i = 1; i < 11; ++i)
             rowCount.addItem(i);
 
         GridBagConstraints constraints = new GridBagConstraints();
@@ -92,10 +99,10 @@ public class LevelEditMenu extends JPanel implements ItemListener, MouseListener
         columnCount.addItemListener(this);
         rowCount.addItemListener(this);
 
-        saveButton.addMouseListener(this);
-        discardButton.addMouseListener(this);
-        delete.addMouseListener(this);
-        help.addMouseListener(this);
+        saveButton.addActionListener(this);
+        discardButton.addActionListener(this);
+        delete.addActionListener(this);
+        help.addActionListener(this);
     }
 
     public void setRowsColumns(int rows, int columns) {
@@ -116,21 +123,26 @@ public class LevelEditMenu extends JPanel implements ItemListener, MouseListener
         }
     }
 
-    public void mouseClicked(MouseEvent e) {
+    public void actionPerformed(ActionEvent e) {
         JButton button = (JButton)e.getSource();
 
         switch (button.getText()) {
             case "Save":
-                if (editor.saveLevel(true))
+                if (editor.saveLevel(true)) {
+                    editor.updateSize();
                     editor.showCard("Level Edit Start");
+                }
                 break;
             case "Discard":
+                editor.updateSize();
                 editor.saveLevel(false);
                 editor.showCard("Level Edit Start");
                 break;
             case "Delete Level":
-                if (editor.deleteLevel())
+                if (editor.deleteLevel()) {
+                    editor.updateSize();
                     editor.showCard("Level Edit Start");
+                }
                 break;
             case "Help":
                 JOptionPane.showMessageDialog(editor, "1. Drag ball to start position\n" +
@@ -141,21 +153,5 @@ public class LevelEditMenu extends JPanel implements ItemListener, MouseListener
             default:
                 break;
         }
-    }
-
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    public void mouseExited(MouseEvent e) {
-
     }
 }

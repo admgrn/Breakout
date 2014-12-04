@@ -1,39 +1,49 @@
 package breakout;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import javax.swing.JFrame;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.Box;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class Options extends JPanel implements MouseListener {
+public class Options extends JPanel implements ActionListener {
 
     private GameManager game;
     private JFrame frame;
 
-    private JLabel title = new JLabel("Options");
-    private JLabel resTitle = new JLabel("Resolution: ");
-    private JLabel startLivesTitle = new JLabel("Starting Lives: ");
     private JComboBox<Object> resolution = new JComboBox<>();
     private JComboBox<Object> startingLives = new JComboBox<>();
-    private JButton done = new JButton("Done");
 
     private static String location;
 
     public Options(GameManager game, JFrame frame) {
         super();
+
+        JLabel title = new JLabel("Options");
+        JLabel resTitle = new JLabel("Resolution: ");
+        JLabel startLivesTitle = new JLabel("Starting Lives: ");
+        JButton done = new JButton("Done");
+
         setBackground(Color.LIGHT_GRAY);
         setLayout(new GridBagLayout());
 
         this.game = game;
         this.frame = frame;
 
-        resolution.addItem("720x480");
+        resolution.addItem("740x480");
         resolution.addItem("1000x700");
         resolution.addItem("1200x1000");
 
         switch (frame.getHeight()) {
             case 480:
-                resolution.setSelectedItem("720x480");
+                resolution.setSelectedItem("740x480");
                 break;
             case 700:
                 resolution.setSelectedItem("1000x700");
@@ -106,19 +116,19 @@ public class Options extends JPanel implements MouseListener {
         constraints.gridwidth = 2;
         this.add(done, constraints);
 
-        done.addMouseListener(this);
+        done.addActionListener(this);
     }
 
     public static void setReturnTo(String location) {
         Options.location = location;
     }
 
-    public void mouseReleased(MouseEvent e) {
+    public void actionPerformed(ActionEvent e) {
         game.setStartLives((int)startingLives.getSelectedItem());
 
         switch ((String)resolution.getSelectedItem()) {
-            case "720x480":
-                frame.setSize(new Dimension(720, 480));
+            case "740x480":
+                frame.setSize(new Dimension(740, 480));
                 break;
             case "1000x700":
                 frame.setSize(new Dimension(1000, 700));
@@ -128,17 +138,9 @@ public class Options extends JPanel implements MouseListener {
                 break;
         }
 
-        if (location != Breakout.PAUSE_MENU)
+        if (!location.equals(Breakout.PAUSE_MENU))
             Breakout.changeCard(Breakout.MAIN_MENU);
         else
             Breakout.changeCard(Breakout.PAUSE_MENU);
     }
-
-    public void mouseClicked(MouseEvent e) {}
-
-    public void mousePressed(MouseEvent e) {}
-
-    public void mouseEntered(MouseEvent e) {}
-
-    public void mouseExited(MouseEvent e) { }
 }

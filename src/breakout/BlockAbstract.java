@@ -1,9 +1,10 @@
 package breakout;
 
 import javax.swing.JPanel;
-import java.awt.*;
+import java.awt.Rectangle;
 
 public abstract class BlockAbstract extends JPanel implements PositionInterval {
+
     protected boolean vis;
     protected boolean destroyable;
 

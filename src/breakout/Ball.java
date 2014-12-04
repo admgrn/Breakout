@@ -1,16 +1,18 @@
 package breakout;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 public class Ball extends JPanel implements PositionInterval {
+
     private int diameter;
     private Position position;
     private BufferedImage image;
-    private static int oldHeight = 480;
+    private int offset = 0;
 
     private JFrame frame;
 
@@ -32,12 +34,7 @@ public class Ball extends JPanel implements PositionInterval {
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        //g.fillOval(position.getX(), position.getY(), diameter, diameter);
         ((Graphics2D)g).drawImage(image, null, position.getX(), position.getY());
-    }
-
-    public void UpdatePosition(int dx, int dy) {
-        position.changeXY(dx, dy);
     }
 
     public Interval getInterval() {
@@ -50,17 +47,19 @@ public class Ball extends JPanel implements PositionInterval {
 
     public void setPosition(Position position) {
         if (frame.getHeight() != 0) {
-            position.changeXY(0, (frame.getHeight() - oldHeight) / 2);
-            oldHeight = frame.getHeight();
+            this.position.setPosition(new Position(position.getX(),
+                                 ((position.getY() - offset) + ((frame.getHeight() - 480)))));
+            offset = (frame.getHeight() - 480);
+        } else {
+            this.position.setPosition(position);
         }
-        this.position.setPosition(position);
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     public int getDiameter() {
         return diameter;
-    }
-
-    public void setDiameter(int diameter) {
-        this.diameter = diameter;
     }
 }

@@ -15,7 +15,7 @@ public class Level implements Serializable {
 
     public Level (int width, int height, Position start, Transform startTransform) {
         size = new Size(width, height);
-        blocks = new LinkedList<BlockAbstract>();
+        blocks = new LinkedList<>();
         this.start = start;
         this.startTransform = startTransform;
     }
@@ -26,7 +26,7 @@ public class Level implements Serializable {
         startTransform = new Transform(level.startTransform);
         remaining = level.remaining;
         maxCount = level.maxCount;
-        blocks = new LinkedList<BlockAbstract>();
+        blocks = new LinkedList<>();
 
         for (BlockAbstract b : level.blocks) {
             blocks.add(b.copy());
@@ -53,10 +53,7 @@ public class Level implements Serializable {
     }
 
     public boolean didWin() {
-        if (maxCount - blocks.size() >= remaining)
-            return true;
-        else
-            return false;
+        return  maxCount - blocks.size() >= remaining;
     }
 
     public Size getSize() {
@@ -83,10 +80,6 @@ public class Level implements Serializable {
         }
     }
 
-    public void setBlocks(LinkedList<BlockAbstract> blocks) {
-        this.blocks = blocks;
-    }
-
     public int getRemaining() {
         return remaining;
     }
@@ -95,16 +88,7 @@ public class Level implements Serializable {
         return start;
     }
 
-    public void setStart(Position start) {
-        this.start = start;
-    }
-
     public Transform getStartTransform() {
         return startTransform;
     }
-
-    public void setStartTransform(Transform startTransform) {
-        this.startTransform = startTransform;
-    }
-
 }

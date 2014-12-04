@@ -1,10 +1,20 @@
 package breakout;
- 
-import java.awt.Dimension;
-import javax.swing.*;
+
+import javax.swing.Timer;
+import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -14,6 +24,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
  
 public class GameManager implements ActionListener, Serializable {
+
     public final static transient int STOPPED = 0;
     public final static transient int RUNNING = 1;
     public final static transient int WIN = 2;
@@ -72,14 +83,12 @@ public class GameManager implements ActionListener, Serializable {
             mainPanel.removeCascade();
             timer.stop();
             state = PAUSED;
-            // mainPanel.ballPause();
         }
     }
  
     public void newGame() {
         canSave = true;
-        
-        // LevelPackage.resetLevels();
+
         this.levels = LevelPackage.getCurrentLevels(false);
         
         nextLife = 1000;
@@ -87,11 +96,12 @@ public class GameManager implements ActionListener, Serializable {
         score = 0;
         scorePanel.updateScore(score);
         scorePanel.updateLives(lives);
+        scorePanel.updateLevels(1, levels.size());
         
         currentLevel = 0;
         currentGame = new Level(levels.elementAt(0));
         mainPanel.setLevel(currentGame);
-        
+        ball.setOffset(0);
         ball.setPosition(currentGame.getStart());
         ballChange.setTrans(new Transform(0, 0));
         paddle.setDelta(0);
@@ -126,8 +136,8 @@ public class GameManager implements ActionListener, Serializable {
         }
     }
     
-    public void load() throws FileNotFoundException, IOException, ClassNotFoundException {
-        GameManager load = null;
+    public void load() throws IOException, ClassNotFoundException {
+        GameManager load;
         InputStream file = new FileInputStream("breakout.sav");
         InputStream buffer = new BufferedInputStream(file);
         ObjectInput input = new ObjectInputStream(buffer);
@@ -148,14 +158,15 @@ public class GameManager implements ActionListener, Serializable {
                 
             scorePanel.updateScore(score);
             scorePanel.updateLives(lives);
-                
+            scorePanel.updateLevels(currentLevel + 1, this.levels.size());
+
+            ball.setOffset(0);
             ball.setPosition(currentGame.getStart());
             ballChange.setTrans(new Transform(0, 0));
             paddle.setDelta(0);
             mainPanel.removeCascade();
             startGame();
-        }
-        else {
+        } else {
             JOptionPane.showMessageDialog(mainPanel, "Error opening save file.");
         }
     }
@@ -165,15 +176,16 @@ public class GameManager implements ActionListener, Serializable {
         if (levels.size() > currentLevel) {
             canSave = true;
             currentGame = new Level(levels.elementAt(currentLevel));
+            scorePanel.updateLevels(currentLevel + 1, levels.size());
             mainPanel.setLevel(currentGame);
             mainPanel.setPaused(true);
+            ball.setOffset(0);
             ball.setPosition(currentGame.getStart());
             ballChange.setTrans(new Transform(0, 0));
             paddle.setDelta(0);
             mainPanel.removeCascade();
             startGame();
-        }
-        else {
+        } else {
             timer.stop();
             JOptionPane.showMessageDialog(mainPanel, "You win!\n" +
                     "Score: " + score);
@@ -187,6 +199,7 @@ public class GameManager implements ActionListener, Serializable {
  
     public void lostLife() {
         --lives;
+        ball.setOffset(0);
         ball.setPosition(currentGame.getStart());
         ballChange.setTrans(new Transform(0, 0));
         paddle.setDelta(0);
@@ -196,8 +209,7 @@ public class GameManager implements ActionListener, Serializable {
         if (lives <= 0) {
             state = LOSS;
             mainPanel.gameOver();
-        }
-        else {
+        } else {
             state = BALLPAUSE;
             mainPanel.ballPause();
         }
@@ -315,62 +327,6 @@ public class GameManager implements ActionListener, Serializable {
 
     public void updateBallPos() {
         ball.setPosition(ball.getPosition());
-    }
- 
-    public Ball getBall() {
-        return ball;
-    }
- 
-    public void setBall(Ball ball) {
-        this.ball = ball;
-    }
- 
-    public Paddle getPaddle() {
-        return paddle;
-    }
- 
-    public void setPaddle(Paddle paddle) {
-        this.paddle = paddle;
-    }
- 
-    public Level getCurrentGame() {
-        return currentGame;
-    }
- 
-    public void setCurrentGame(Level currentGame) {
-        this.currentGame = currentGame;
-    }
- 
-    public Vector<Level> getLevels() {
-        return levels;
-    }
- 
-    public void setLevels(Vector<Level> levels) {
-        this.levels = levels;
-    }
- 
-    public void setScore(int score) {
-        this.score = score;
-    }
- 
-    public int getScore() {
-        return score;
-    }
- 
-    public void setLives(int lives) {
-        this.lives = lives;
-    }
- 
-    public int getLives() {
-        return lives;
-    }
- 
-    public int getCurrentLevel() {
-        return currentLevel;
-    }
- 
-    public void setCurrentLevel(int currentLevel) {
-        this.currentLevel = currentLevel;
     }
  
     public int getState() {

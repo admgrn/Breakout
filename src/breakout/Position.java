@@ -3,6 +3,7 @@ package breakout;
 import java.io.Serializable;
 
 public class Position implements Serializable {
+
     private int x;
     private int y;
 
@@ -28,9 +29,9 @@ public class Position implements Serializable {
         x = position.x;
         y = position.y;
     }
+
     public void changeXY(int dx, int dy) {
         x += dx;
         y += dy;
     }
-
 }
