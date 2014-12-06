@@ -125,6 +125,7 @@ public class LevelBlockEdit extends JPanel implements ActionListener, ItemListen
         }
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         BlockAbstract block = null;
 
@@ -145,6 +146,7 @@ public class LevelBlockEdit extends JPanel implements ActionListener, ItemListen
         editor.updateEditedBlock(block);
     }
 
+    @Override
     public void itemStateChanged(ItemEvent e) {
         JComboBox found = (JComboBox)e.getSource();
 

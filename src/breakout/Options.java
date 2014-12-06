@@ -123,6 +123,7 @@ public class Options extends JPanel implements ActionListener {
         Options.location = location;
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         game.setStartLives((int)startingLives.getSelectedItem());
 

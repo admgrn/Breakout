@@ -23,6 +23,12 @@ public class Breakout {
     public static final String PAUSE_MENU = "Pause Menu";
     public static final String LEVEL_EDITOR = "Level Editor";
     
+    /**
+     * Main function of the main Breakout class. Properly sets up the layout of
+     * the internal Breakout JFrame, and controls the CardLayout which drives the
+     * displayed page.
+     * @param args no command line arguments
+     */
     public static void main(String[] args) {
         JPanel mainPanel;
         JFrame frame;
@@ -103,6 +109,10 @@ public class Breakout {
         });
     }
 
+    /**
+     * Swaps the CardLayout to the proper card.
+     * @param name the card for the CardLayout to swap to.
+     */
     public static void changeCard(String name) {
         card.show(cards, name);
     }

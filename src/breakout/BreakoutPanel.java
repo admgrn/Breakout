@@ -24,14 +24,17 @@ public class BreakoutPanel extends JPanel implements KeyListener {
     private boolean leftDown = false;
     private boolean rightDown = false;
     private boolean isPaused = true;
- 
     private LinkedList<JLabel> scoreCascade;
- 
     private JLayeredPane layers;
  
+    /**
+     * BreakoutPanel's only constructor. Initializes all member data, and sets up
+     * the BorderLayout which controls the main BreakoutPanel.
+     * @param ball the Ball object which will be used in the game
+     * @param paddle the Paddle object which will be used in the game
+     */
     public BreakoutPanel(Ball ball, Paddle paddle) {
         super();
-        this.ball = ball;
         this.ball = ball;
         this.paddle = paddle;
         this.blocks = new JPanel();
@@ -53,6 +56,12 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         addKeyListener(this);
     }
  
+    /**
+     * setLevel changes the BreakoutPanel to display the proper Level object.
+     * Called each time the player proceeds to the next level, a game is loaded,
+     * or when a new game is created.
+     * @param level the Level object to be loaded into the BreakoutPanel
+     */
     public void setLevel(Level level) {
         JPanel oldBlock = blocks;
  
@@ -69,16 +78,17 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         layers.add(instruct, new Integer(70));
     }
  
-    public void keyTyped(KeyEvent e) {}
- 
- 
+    /**
+     * Listener behind the controls of the game. Listens for arrow keys to move
+     * the paddle, the space bar to start the game, and the escape key to pause
+     * the game.
+     * @param e KeyEvent used to determine the key pressed
+     */
+    @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_LEFT:
-                // Set so that the user can still move even when it's paused,
-                // so that the user isn't stuck on the opposite side of the
-                // screen when they lose a life.
                 paddle.changeDelta(-1);
                 leftDown = true;
                 break;
@@ -109,6 +119,11 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         }
     }
  
+    /**
+     * Overridden keyReleased method to properly read the input of the arrow keys.
+     * @param e KeyEvent used to determine the key released
+     */
+    @Override
     public void keyReleased(KeyEvent e) {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
@@ -123,16 +138,28 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         }
     }
 
+    /**
+     * Used to clear the leftDown and rightDown variables. Called when the game
+     * is finished.
+     */
     public void clearControls() {
         leftDown = false;
         rightDown = false;
     }
  
+    /**
+     * Pauses the Ball object and adds the instruction message. When the space bar
+     * is pressed, this message dissipates.
+     */
     public void ballPause() {
         isPaused = true;
         layers.add(instruct, new Integer(80));
     }
     
+    /**
+     * Called after the user hits continue in the PauseMenu, or when the user
+     * hits escape in the PauseMenu.
+     */
     public void resume() {
         isPaused = false;
         if (manager.getState() != GameManager.BALLPAUSE) {
@@ -141,12 +168,22 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         }
     }
  
+    /**
+     * Called to properly swap to the GameOver card after the player loses all
+     * of their lives.
+     */
     public void gameOver() {
         removeCascade();
         clearControls();
         Breakout.changeCard(Breakout.GAME_OVER);
     }
    
+    /**
+     * Called upon destruction of a BlockWeak. Displays the score received for
+     * breaking said BlockWeak and then displays it in a newly generated JLabel.
+     * @param value the score received for destroying a BlockWeak
+     * @param rect the size of the BlockWeak, to properly center the score text
+     */
     public void madeScore(int value, Rectangle rect) {
         String text = Integer.toString(value);
  
@@ -159,6 +196,12 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         layers.add(visibleLabel, new Integer(80));
     }
  
+    /**
+     * Overridden paintComponent method to properly draw all of the objects contained
+     * in the BreakoutPanel, including Ball, Paddle, blocks, and instruction message
+     * @param g abstract Graphics class used to paint all necessary Components
+     */
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         revalidate();
@@ -175,6 +218,10 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         this.paddle.updatePosition();
     }
  
+    /**
+     * Used to draw the cascading JLabel which shows the score; displays as a falling
+     * score after breaking a BlockWeak.
+     */
     public void updateCascade() {
         for (Iterator<JLabel> it = scoreCascade.iterator(); it.hasNext(); ) {
             JLabel lab = it.next();
@@ -189,6 +236,9 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         }
     }
 
+    /**
+     * Used to remove the scoreCascade.
+     */
     public void removeCascade() {
         for (Iterator<JLabel> it = scoreCascade.iterator(); it.hasNext(); ) {
             JLabel lab = it.next();
@@ -197,11 +247,23 @@ public class BreakoutPanel extends JPanel implements KeyListener {
         }
     }
  
+    /**
+     * Set the state of the BreakoutPanel.
+     * @param isPaused state of the BreakoutPanel
+     */
     public void setPaused(boolean isPaused) {
         this.isPaused = isPaused;
     }
  
+    /**
+     * Set the GameManager driving the BreakoutPanel.
+     * @param manager manager of the BreakoutPanel
+     */
     public void setManager(GameManager manager) {
         this.manager = manager;
     }
+    
+    // Unused
+    @Override
+    public void keyTyped(KeyEvent e) {}
 }

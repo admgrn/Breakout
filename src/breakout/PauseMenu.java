@@ -78,6 +78,7 @@ public class PauseMenu extends JPanel implements ActionListener {
         mainMenu.addActionListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         JButton src = (JButton)e.getSource();
         switch (src.getText()) {

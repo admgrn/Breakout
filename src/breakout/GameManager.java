@@ -58,6 +58,14 @@ public class GameManager implements ActionListener, Serializable {
  
     private transient Transform ballChange = new Transform();
  
+    /**
+     * Main constructor for the GameManager. Initializes all variables and starts
+     * the Timer which drives the action in the game.
+     * @param ball Ball object used in the game
+     * @param paddle Paddle object used in the game
+     * @param mainPanel BreakoutPanel used by the game
+     * @param scorePanel ScorePanel used by the game
+     */
     public GameManager(Ball ball, Paddle paddle, BreakoutPanel mainPanel, ScorePanel scorePanel) {
         this.ball = ball;
         this.paddle = paddle;
@@ -68,6 +76,9 @@ public class GameManager implements ActionListener, Serializable {
         newGame();
     }
  
+    /**
+     * togglePauseBall is used to correctly set the state of the Ball object.
+     */
     public void togglePauseBall() {
         if (state == BALLPAUSE) {
             state = RUNNING;
@@ -77,6 +88,10 @@ public class GameManager implements ActionListener, Serializable {
         }
     }
     
+    /**
+     * Called when the player pauses the game by hitting the escape key. Properly
+     * sets the state to ensure nothing happens while the player peruses the PauseMenu.
+     */
     public void togglePaused() {
         if (state == RUNNING) {
             paddle.setDelta(0);
@@ -86,6 +101,9 @@ public class GameManager implements ActionListener, Serializable {
         }
     }
  
+    /**
+     * Sets up the initial game logic.
+     */
     public void newGame() {
         canSave = true;
 
@@ -108,15 +126,24 @@ public class GameManager implements ActionListener, Serializable {
         mainPanel.removeCascade();
     }
  
+    /**
+     * Initializes the game.
+     */
     public void startGame() {
         timer.start();
         state = BALLPAUSE;
     }
    
+    /**
+     * Resumes the game after returning from the PauseMenu.
+     */
     public void resume() {
         timer.start();
     }
     
+    /**
+     * Stores data from the GameManager class in a file named "breakout.sav"
+     */
     public void save() {
         try {
             savedLives = lives;
@@ -136,6 +163,11 @@ public class GameManager implements ActionListener, Serializable {
         }
     }
     
+    /**
+     * Restores the data saved in "breakout.sav"
+     * @throws IOException caught by MainMenu
+     * @throws ClassNotFoundException caught by MainMenu
+     */
     public void load() throws IOException, ClassNotFoundException {
         GameManager load;
         InputStream file = new FileInputStream("breakout.sav");
@@ -171,6 +203,10 @@ public class GameManager implements ActionListener, Serializable {
         }
     }
     
+    /**
+     * Displays the next Level in the levels Vector. Displays the win game message
+     * if there are no more levels.
+     */
     public void nextLevel() {
         ++currentLevel;
         if (levels.size() > currentLevel) {
@@ -197,6 +233,10 @@ public class GameManager implements ActionListener, Serializable {
         }
     }
  
+    /**
+     * Updates the ScorePanel and determines whether the player has lost the game.
+     * If so, displays the GameOver panel.
+     */
     public void lostLife() {
         --lives;
         ball.setOffset(0);
@@ -215,11 +255,18 @@ public class GameManager implements ActionListener, Serializable {
         }
     }
  
+    /**
+     * Used by the Timer object to properly update the Ball object's position
+     * in the panel.
+     * @param e 
+     */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (state == WIN) {
             state = GOINGTONEXTLEVEL;
             ScheduledExecutorService stopLevel = Executors.newSingleThreadScheduledExecutor();
             stopLevel.schedule(new Runnable() {
+                @Override
                 public void run() {
                     nextLevel();
                 }
@@ -231,6 +278,11 @@ public class GameManager implements ActionListener, Serializable {
         mainPanel.repaint();
     }
  
+    /**
+     * Determines the next location for the Ball object and paints it in said
+     * location. Also determines when score is made, when a life is lost, and whether
+     * or not a BlockWeak needs to be removed.
+     */
     private void updateBallPosition() {
         int maxX = mainPanel.getWidth();
         int maxY = mainPanel.getHeight();
@@ -325,30 +377,58 @@ public class GameManager implements ActionListener, Serializable {
         }
     }
 
+    /**
+     * Sets the Ball object's position properly when continuing the game.
+     */
     public void updateBallPos() {
         ball.setPosition(ball.getPosition());
     }
  
+    /** 
+     * Returns the state of the GameManager object.
+     * @return the state of the specified object
+     */
     public int getState() {
         return state;
     }
    
+    /**
+     * Sets the state of the GameManager object.
+     * @param s state for the GameManager to be set
+     */
     public void setState(int s) {
         state = s;
     }
     
+    /**
+     * Returns whether or not the user can save (users can only save in between
+     * levels).
+     * @return boolean value indicating the viability of saving
+     */
     public boolean getCanSave() {
         return canSave;
     }
     
+    /**
+     * Sets the canSave boolean
+     * @param b the canSave boolean value
+     */
     public void setCanSave(boolean b) {
         canSave = b;
     }
 
+    /**
+     * Returns the amount of lives the player starts with.
+     * @return the amount of lives the player starts with
+     */
     public int getStartLives() {
         return startLives;
     }
 
+    /**
+     * Sets the amount of lives the player starts with.
+     * @param startLives the amount of lives the player starts with
+     */
     public void setStartLives(int startLives) {
         this.startLives = startLives;
     }

@@ -262,6 +262,7 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
         return true;
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         Point mousePosition = e.getPoint();
         Interval ballInterval = this.ball.getInterval();
@@ -280,6 +281,7 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
         }
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
         Point mousePosition = e.getPoint();
 
@@ -318,8 +320,8 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
 
         repaint();
     }
-    public void mouseClicked(MouseEvent e) {}
 
+    @Override
     public void mouseReleased(MouseEvent e) {
         isDraggingBall = false;
         Point mousePosition = e.getPoint();
@@ -336,9 +338,20 @@ public class LevelEditor extends JPanel implements MouseMotionListener, MouseLis
         }
     }
 
+    
+    // Unused
+    @Override
     public void mouseMoved(MouseEvent e) {}
 
+    // Unused
+    @Override
     public void mouseExited(MouseEvent e) {}
 
+    // Unused
+    @Override
     public void mouseEntered(MouseEvent e) {}
+    
+    // Unused
+    @Override
+    public void mouseClicked(MouseEvent e) {}
 }

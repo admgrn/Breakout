@@ -23,12 +23,14 @@ public class Paddle extends JPanel implements PositionInterval {
         setOpaque(false);
     }
 
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.BLACK);
         g.fillRect(offset, padding, size.getWidth(), size.getHeight());
     }
 
+    @Override
     public void setBounds(int x, int y, int width, int height) {
         if (height <= size.height + padding * 2) {
             height = size.height + padding * 2;
@@ -36,6 +38,7 @@ public class Paddle extends JPanel implements PositionInterval {
 
         super.setBounds(x, y, width, height);
     }
+    @Override
     public Interval getInterval() {
         Rectangle rect = getBounds();
         int x = (int)rect.getX();

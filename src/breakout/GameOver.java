@@ -14,6 +14,10 @@ import javax.swing.JFrame;
 
 public class GameOver extends JPanel implements ActionListener {
    
+    /**
+     * Constuctor for the GameOver JPanel, which implements all the menu options
+     * and listeners for said options.
+     */
     public GameOver() {
         super();
 
@@ -48,6 +52,13 @@ public class GameOver extends JPanel implements ActionListener {
         quitGame.addActionListener(this);
     }
 
+    /**
+     * Overridden method to listen for when a JButton is clicked. Checks which
+     * JButton was clicked, then carries out the proper actions (returns to
+     * MainMenu or quits the game).
+     * @param e ActionEvent to determine the source of the fired event
+     */
+    @Override
     public void actionPerformed(ActionEvent e) {
         JButton clicked = (JButton)e.getSource();
         switch (clicked.getText()) {

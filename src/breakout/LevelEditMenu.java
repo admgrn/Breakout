@@ -112,6 +112,7 @@ public class LevelEditMenu extends JPanel implements ItemListener, ActionListene
         noUpdate = false;
     }
 
+    @Override
     public void itemStateChanged(ItemEvent e) {
         JComboBox box = (JComboBox)e.getSource();
         if (!noUpdate) {
@@ -123,6 +124,7 @@ public class LevelEditMenu extends JPanel implements ItemListener, ActionListene
         }
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         JButton button = (JButton)e.getSource();
 

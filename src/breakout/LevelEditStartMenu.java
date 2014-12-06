@@ -86,6 +86,7 @@ public class LevelEditStartMenu extends JPanel implements  ActionListener {
         frame.setSize(new Dimension(frameSize.width, frameSize.height));
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JComboBox) {
             JComboBox box = (JComboBox) e.getSource();

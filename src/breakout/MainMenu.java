@@ -73,6 +73,7 @@ public class MainMenu extends JPanel implements ActionListener {
         quitGame.addActionListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         JButton clicked = (JButton)e.getSource();
         switch(clicked.getText()) {
