@@ -36,23 +36,3 @@ mentioning.
     editor.
 
 Note: This game is implemented as an application.
-
-Division of Labor
-=================
-
-Work was divided as close to 50/50 as possible. We used git as a version control system that allowed for simultaneous
-work.
-
-Adam
- 1. Setup game engine
- 2. Setup level editor
- 3. Class Design
- 4. Interface Design
- 5. Level Design
-
-Zach
- 1. Menu Design
- 2. Class Design
- 3. Interface Design
- 4. Optimization and bug fixes
- 5. Layout design
